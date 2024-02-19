@@ -1,0 +1,10 @@
+.control {
+    display: block;
+    padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+    border-radius: var(--mantine-radius-md);
+    font-weight: 500;
+    text-decoration: none;
+    color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-gray-1));
+}
+
+
