@@ -28,7 +28,10 @@ const Root = () => {
                     <Group justify="space-between" style={{ flex: 1 }}>
                         <Logo />
                         <Group ml="xl" gap={0} visibleFrom="sm">
-                            <Link className={classes.control} to="/">
+                            <Link className={classes.control} to="/" onClick={close}>
+                                На главную
+                            </Link>
+                            <Link className={classes.control} to="/login">
                                 Войти в систему
                             </Link>
                             <ThemeToggle />
@@ -39,6 +42,9 @@ const Root = () => {
 
             <AppShell.Navbar py="md" px={4}>
                 <Link className={classes.control} to="/" onClick={close}>
+                    На главную
+                </Link>
+                <Link className={classes.control} to="/login" onClick={close}>
                     Войти в систему
                 </Link>
                 <ThemeToggle />

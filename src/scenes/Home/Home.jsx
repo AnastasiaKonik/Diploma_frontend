@@ -3,8 +3,19 @@ import {Container, Title, Text, Stack, Paper, Button, Group} from "@mantine/core
 
 import classes from "./Home.module.css";
 import {Logo} from "../../components/Logo";
+import {useNavigate} from "react-router-dom";
 
 export const Home = () => {
+    let navigate = useNavigate();
+    const routeChangeSt = () => {
+        let path = `/registration_student`;
+        navigate(path);
+    };
+    const routeChangeTut = () => {
+        let path = `/registration_tutor`;
+        navigate(path);
+    };
+
     return (
         <Container fluid>
             <Container p="xl" w="fit-content">
@@ -21,8 +32,10 @@ export const Home = () => {
                             Пользоваться системой могут как репетиторы, так и ученики.
                         </Text>
                         <Group justify="center">
-                            <Button className={classes.reg_btn} variant="filled">Зарегистрироваться как ученик</Button>
-                            <Button className={classes.reg_btn} variant="filled">Зарегистрироваться как репетитор</Button>
+                            <Button className={classes.reg_btn} variant="filled" onClick={() => routeChangeSt()}>Зарегистрироваться
+                                как ученик</Button>
+                            <Button className={classes.reg_btn} variant="filled" onClick={() => routeChangeTut()}>Зарегистрироваться как
+                                репетитор</Button>
                         </Group>
                     </Stack>
                 </Paper>
