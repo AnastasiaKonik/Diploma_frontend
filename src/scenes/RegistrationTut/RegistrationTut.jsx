@@ -39,7 +39,8 @@ export const RegistrationTut = () => {
             name: (value) => (value.length > 64 ? 'Имя должно быть менее 64 символов' : null),
             lastname: (value) => (value.length > 64 ? 'Фамилия должна быть менее 64 символов' : null),
             patronymic: (value) => (value.length > 64 ? 'Отчество должно быть менее 64 символов' : null),
-            login: matches(/^([a-zA-Z0-9]){4,12}$/, 'Логин должен содержать от 4 до 12 символов латиницей'),
+            login: matches(/^([a-zA-Z0-9]){4,12}$/, 'Логин должен содержать от 4 до 12 символов латиницей ' +
+                'или цифр'),
             // confirmPassword: (value2, value1) =>
             //     value2 !== value1 ? 'Пароли не совпадают' : null,
             subject: (value) => (value.length < 3 || value.length > 32 ?

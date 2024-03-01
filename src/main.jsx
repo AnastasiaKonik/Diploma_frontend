@@ -10,6 +10,7 @@ import { theme } from "./theme";
 import {Home, RegistrationTut, RegistrationSt} from "./scenes";
 import Root from "./Root";
 import {Login} from "./scenes/Login/index.js";
+import {PersonalAreaSt} from "./scenes/PersonalAreaSt/index.js";
 
 const router = createBrowserRouter([
     {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
             {
                 path: "/login",
                 element: <Login />,
+            },
+            {
+                path: "/lk_student",
+                element: <PersonalAreaSt />,
             },
         ],
     },

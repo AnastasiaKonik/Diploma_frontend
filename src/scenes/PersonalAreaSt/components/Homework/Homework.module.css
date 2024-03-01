@@ -1,0 +1,8 @@
+.text {
+    color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-gray-1));
+}
+
+.homeworkCard {
+    width: auto;
+    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+}

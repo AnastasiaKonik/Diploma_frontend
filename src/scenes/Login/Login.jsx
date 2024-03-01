@@ -2,6 +2,7 @@ import React from "react";
 import {Button, Container, Paper, PasswordInput, TextInput, Title} from "@mantine/core";
 import classes from "./Login.module.css";
 import {matches, useForm} from "@mantine/form";
+import {useNavigate} from "react-router-dom";
 
 export const Login = () => {
     const form = useForm({
@@ -11,9 +12,16 @@ export const Login = () => {
         },
 
         validate: {
-            login: matches(/^([a-zA-Z0-9]){4,12}$/, 'Логин должен содержать от 4 до 12 символов латиницей'),
+            login: matches(/^([a-zA-Z0-9]){4,12}$/, 'Логин должен содержать от 4 до 12 символов латиницей ' +
+                'или цифр'),
         },
     });
+
+    let navigate = useNavigate();
+    const routeChangeLogin = () => {
+        let path = `/lk_student`;
+        navigate(path);
+    };
 
     return (
         <Container size={520} my={40}>
@@ -36,7 +44,8 @@ export const Login = () => {
                         {...form.getInputProps('password')}
                         required
                     />
-                    <Button fullWidth mt="xl" className={classes.login_btn} type="submit">
+                    <Button fullWidth mt="xl" className={classes.login_btn} type="submit"
+                            onClick={() => routeChangeLogin()}>
                         Войти
                     </Button>
                 </form>

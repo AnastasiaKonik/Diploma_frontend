@@ -1,0 +1,7 @@
+.icon {
+    color: light-dark(var(--mantine-color-cyan-7), var(--mantine-color-blue-7));
+}
+
+.text {
+    color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-gray-1));
+}
