@@ -1,0 +1,8 @@
+.logout_btn {
+    color: var(--mantine-color-gray-1);
+    background-color: light-dark(var(--mantine-color-pink-8), var(--mantine-color-pink-9));
+}
+
+.text {
+    color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-gray-3));
+}

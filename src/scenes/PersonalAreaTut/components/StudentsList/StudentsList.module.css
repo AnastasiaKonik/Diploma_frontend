@@ -1,0 +1,17 @@
+.text {
+    color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-gray-3));
+}
+
+.link {
+    color: light-dark(var(--mantine-color-cyan-7), var(--mantine-color-blue-7));
+}
+
+.add_btn {
+    color: var(--mantine-color-gray-1);
+    background-color: light-dark(var(--mantine-color-cyan-7), var(--mantine-color-blue-7));
+}
+
+
+.iconArchive {
+    color: light-dark(var(--mantine-color-yellow-9), var(--mantine-color-yellow-7));
+}

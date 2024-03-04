@@ -1,0 +1,21 @@
+.btn {
+    color: var(--mantine-color-gray-1);
+    background-color: light-dark(var(--mantine-color-cyan-7), var(--mantine-color-blue-7));
+}
+
+.text {
+    color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-gray-3));
+}
+
+.title {
+    color: light-dark(var(--mantine-color-teal-8), var(--mantine-color-teal-9));
+}
+
+.icon {
+    color: light-dark(var(--mantine-color-cyan-7), var(--mantine-color-blue-7));
+}
+
+.send_btn{
+    color: var(--mantine-color-gray-1);
+    background-color: light-dark(var(--mantine-color-teal-8), var(--mantine-color-teal-9));
+}

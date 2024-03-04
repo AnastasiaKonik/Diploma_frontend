@@ -19,7 +19,7 @@ export const Login = () => {
 
     let navigate = useNavigate();
     const routeChangeLogin = () => {
-        let path = `/lk_student`;
+        let path = `/`;
         navigate(path);
     };
 

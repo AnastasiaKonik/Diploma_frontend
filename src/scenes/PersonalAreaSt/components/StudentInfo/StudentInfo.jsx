@@ -1,7 +1,8 @@
 import {ActionIcon, Group, Text, TextInput} from "@mantine/core";
 import classes from "./StudentInfo.module.css";
-import {IconPencil, IconPhoneCall, IconSchool, IconUser} from "@tabler/icons-react";
+import {IconEdit, IconPhoneCall, IconSchool, IconUser} from "@tabler/icons-react";
 import {useState} from "react";
+import {IMaskInput} from "react-imask";
 
 
 export function StudentInfo() {
@@ -48,6 +49,10 @@ export function StudentInfo() {
                         {isPhoneEditing ? (
                             <TextInput
                                 value={phone}
+                                minlength="18"
+                                maxlength="18"
+                                component={IMaskInput}
+                                mask="+7 (000) 000-00-00"
                                 onChange={handleChangePhone}
                                 onBlur={handlePhoneBlur}
                             />
@@ -55,7 +60,7 @@ export function StudentInfo() {
                             <Text fz="lg" className={classes.text}>{phone}</Text>
                         )}
                         <ActionIcon variant="subtle" color="gray" onClick={handlePhoneClick}>
-                            <IconPencil size="1rem" stroke={1.5}/>
+                            <IconEdit size="1rem" stroke={1.5}/>
                         </ActionIcon>
                     </Group>
 
@@ -71,7 +76,7 @@ export function StudentInfo() {
                             <Text fz="lg" className={classes.text}>{grade} класс</Text>
                         )}
                         <ActionIcon variant="subtle" color="gray" onClick={handleGradeClick}>
-                            <IconPencil size="1rem" stroke={1.5}/>
+                            <IconEdit size="1rem" stroke={1.5}/>
                         </ActionIcon>
                     </Group>
                 </div>

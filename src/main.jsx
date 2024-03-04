@@ -11,6 +11,8 @@ import {Home, RegistrationTut, RegistrationSt} from "./scenes";
 import Root from "./Root";
 import {Login} from "./scenes/Login/index.js";
 import {PersonalAreaSt} from "./scenes/PersonalAreaSt/index.js";
+import {PersonalAreaTut} from "./scenes/PersonalAreaTut/index.js";
+import {StudentPage} from "./scenes/StudentPage/index.js";
 
 const router = createBrowserRouter([
     {
@@ -36,6 +38,14 @@ const router = createBrowserRouter([
             {
                 path: "/lk_student",
                 element: <PersonalAreaSt />,
+            },
+            {
+                path: "/lk_tutor",
+                element: <PersonalAreaTut />,
+            },
+            {
+                path: "/student_page",
+                element: <StudentPage />,
             },
         ],
     },

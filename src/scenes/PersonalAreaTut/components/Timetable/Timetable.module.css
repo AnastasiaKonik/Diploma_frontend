@@ -1,0 +1,11 @@
+.tableHeader {
+    background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+}
+
+.link {
+    color: light-dark(var(--mantine-color-cyan-7), var(--mantine-color-blue-7));
+}
+
+.iconTrash {
+    color: light-dark(var(--mantine-color-pink-8), var(--mantine-color-pink-9));
+}
