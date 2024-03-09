@@ -50,7 +50,7 @@ export const RegistrationSt = () => {
     });
 
     return (
-        <Container size={520} my={40}>
+        <Container size={520} my={40} className={classes.main}>
             <Title align="center">
                 Создать аккаунт
             </Title>
@@ -103,6 +103,7 @@ export const RegistrationSt = () => {
                         placeholder="Ваше отчество (при наличии)"
                         {...form.getInputProps('patronymic')}/>
                     <TextInput
+                        p={5}
                         label="Класс"
                         placeholder="Класс обучения"
                         {...form.getInputProps('grade')}

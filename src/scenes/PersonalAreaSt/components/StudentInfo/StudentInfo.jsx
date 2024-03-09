@@ -1,6 +1,6 @@
 import {ActionIcon, Group, Text, TextInput} from "@mantine/core";
 import classes from "./StudentInfo.module.css";
-import {IconEdit, IconPhoneCall, IconSchool, IconUser} from "@tabler/icons-react";
+import {IconCheck, IconEdit, IconPhoneCall, IconSchool, IconUser} from "@tabler/icons-react";
 import {useState} from "react";
 import {IMaskInput} from "react-imask";
 
@@ -25,61 +25,75 @@ export function StudentInfo() {
         setGrade(event.target.value);
     };
 
-    const handlePhoneBlur = () => {
+    const handlePhoneSubmit = () => {
         setIsPhoneEditing(false);
+        console.log(phone)
         // Save the changes or perform any required actions here
     };
-    const handleGradeBlur = () => {
+    const handleGradeSubmit = () => {
         setIsGradeEditing(false);
+        console.log(grade)
         // Save the changes or perform any required actions here
     };
 
     return (
-            <Group wrap="nowrap">
-                <div>
-                    <Group wrap="nowrap" gap={10} mt={5}>
-                        <IconUser stroke={1.5} size="1rem" className={classes.icon}/>
-                        <Text fz="xl" className={classes.text}>
-                            Коник Анастасия Александровна
-                        </Text>
-                    </Group>
+        <div>
+            <Group wrap="nowrap" gap={10} mt={5}>
+                <IconUser stroke={1.5} size="1rem" className={classes.icon}/>
+                <Text fz="xl" className={classes.text}>
+                    Коник Анастасия Александровна
+                </Text>
+            </Group>
 
-                    <Group wrap="nowrap" gap={10} mt={5}>
-                        <IconPhoneCall stroke={1.5} size="1rem" className={classes.icon}/>
-                        {isPhoneEditing ? (
-                            <TextInput
-                                value={phone}
-                                minlength="18"
-                                maxlength="18"
-                                component={IMaskInput}
-                                mask="+7 (000) 000-00-00"
-                                onChange={handleChangePhone}
-                                onBlur={handlePhoneBlur}
-                            />
-                        ) : (
-                            <Text fz="lg" className={classes.text}>{phone}</Text>
-                        )}
+            <Group wrap="nowrap" gap={10} mt={5}>
+                <IconPhoneCall stroke={1.5} size="1rem" className={classes.icon}/>
+                {isPhoneEditing ? (
+                    <>
+                        <TextInput
+                            minlength="18"
+                            maxlength="18"
+                            value={phone}
+                            component={IMaskInput}
+                            mask="+7 (000) 000-00-00"
+                            onChange={handleChangePhone}
+                        />
+                        <ActionIcon component="button" variant="subtle" color="green"
+                                    type="submit" onClick={handlePhoneSubmit}>
+                            <IconCheck size="1rem" stroke={1.5}/>
+                        </ActionIcon>
+                    </>
+                ) : (
+                    <>
+                        <Text fz="lg" className={classes.text}>{phone}</Text>
                         <ActionIcon variant="subtle" color="gray" onClick={handlePhoneClick}>
                             <IconEdit size="1rem" stroke={1.5}/>
                         </ActionIcon>
-                    </Group>
+                    </>
+                )}
+            </Group>
 
-                    <Group wrap="nowrap" gap={10} mt={5}>
-                        <IconSchool stroke={1.5} size="1rem" className={classes.icon}/>
-                        {isGradeEditing ? (
-                            <TextInput
-                                value={grade}
-                                onChange={handleChangeGrade}
-                                onBlur={handleGradeBlur}
-                            />
-                        ) : (
-                            <Text fz="lg" className={classes.text}>{grade} класс</Text>
-                        )}
+            <Group wrap="nowrap" gap={10} mt={5}>
+                <IconSchool stroke={1.5} size="1rem" className={classes.icon}/>
+                {isGradeEditing ? (
+                    <>
+                        <TextInput
+                            value={grade}
+                            onChange={handleChangeGrade}
+                        />
+                        <ActionIcon component="button" variant="subtle" color="green"
+                                    type="submit" onClick={handleGradeSubmit}>
+                            <IconCheck size="1rem" stroke={1.5}/>
+                        </ActionIcon>
+                    </>
+                ) : (
+                    <>
+                        <Text fz="lg" className={classes.text}>{grade} класс</Text>
                         <ActionIcon variant="subtle" color="gray" onClick={handleGradeClick}>
                             <IconEdit size="1rem" stroke={1.5}/>
                         </ActionIcon>
-                    </Group>
-                </div>
+                    </>
+                )}
             </Group>
+        </div>
     );
 }

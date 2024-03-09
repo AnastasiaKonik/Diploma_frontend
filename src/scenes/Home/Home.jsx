@@ -17,7 +17,7 @@ export const Home = () => {
     };
 
     return (
-        <Container fluid>
+        <Container fluid className={classes.main}>
             <Container p="xl" w="fit-content">
                 <Paper shadow="md" withBorder={true} p="xl" className={classes.paper}>
                     <Stack justify="center">

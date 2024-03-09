@@ -4,134 +4,127 @@ import {Link} from "react-router-dom";
 import {IconCheck, IconEdit, IconPlus, IconTrash, IconX} from "@tabler/icons-react";
 import {useState} from "react";
 
-// TODO: doesnt work anything
-
-const data = [
-    {
-        date: "24.03.2024",
-        time: '16:00',
-        theme: 'Тригонометрия',
-        student: 'Коник Анастасия Александровна',
-    },
-    {
-        date: "24.03.2024",
-        time: '14:00',
-        theme: 'Планиметрия',
-        student: 'Иванов Иван Иванович',
-    },
-    {
-        date: "21.03.2024",
-        time: '16:00',
-        theme: 'Параметры',
-        student: 'Петров Петр Петрович',
-    },
-];
+// TODO: strange behavior when deleting and adding rows
 
 export function TimetableTut() {
-    const [editingId, setEditingId] = useState(null);
-    const [newRowData, setNewRowData] = useState({date: '', time: '', theme: '', student: ''});
-    const [editedValues, setEditedValues] = useState({});
+    const [data, setData] = useState([
+        {
+            id: 1,
+            date: "24.03.2024",
+            time: '16:00',
+            theme: 'Тригонометрия',
+            student: 'Коник Анастасия Александровна',
+        },
+        {
+            id: 2,
+            date: "24.03.2024",
+            time: '14:00',
+            theme: 'Планиметрия',
+            student: 'Иванов Иван Иванович',
+        },
+        {
+            id: 3,
+            date: "21.03.2024",
+            time: '16:00',
+            theme: 'Параметры',
+            student: 'Петров Петр Петрович',
+        },
+    ]);
 
-    const handleEdit = (id, value) => {
-        setEditingId(id);
-        setEditedValues({ ...editedValues, [id]: value });
+    const [editingCell, setEditingCell] = useState(null);
+
+    const handleEdit = (id, field, value) => {
+        const updatedData = data.map((row) =>
+            row.id === id ? { ...row, [field]: value } : row
+        );
+        setData(updatedData);
     };
 
-    const handleSave = (id) => {
-        const newData = { ...data.find(item => item.id === id), ...editedValues[id] };
-        const updatedData = data.map(item => (item.id === id ? newData : item));
-        setEditingId(null);
-        setEditedValues({});
-    };
-    const handleCancelEdit = () => {
-        setEditingId(null);
+    const handleKeyDown = (event, id, field) => {
+        if (event.key === 'Enter') {
+            setEditingCell(null);
+        }
     };
 
     const handleDelete = (id) => {
-        const updatedData = data.filter(item => item.id !== id);
-        // Update the data source with the updatedData
+        const updatedData = data.filter((row) => row.id !== id);
+        setData(updatedData);
     };
 
-    const handleAddRow = () => {
-        const newId = data.length + 1;
-        const newData = {...newRowData, id: newId};
-        const updatedData = [...data, newData];
-        // Add newData to the data source
-        setNewRowData({date: '', time: '', theme: '', student: ''});
+    const handleAddRow = (id) => {
+        const newId = data.length > 0 ? data[data.length - 1].id + 1 : 1;
+        const newRow = { id: newId, date: 'Введите дату', time: 'Введите время',
+            theme: 'Введите тему', student: 'Введите ФИО'};
+
+        const newData = data.reduce((acc, current) => {
+            acc.push(current);
+            if (current.id === id) {
+                acc.push(newRow);
+            }
+            return acc;
+        }, []);
+
+        setData(newData);
     };
 
-    const rows = data.map((item) => (
-        <Table.Tr key={item.id}>
-            <Table.Td>
-                {editingId === item.id ? (
-                    <TextInput value={item.date} onChange={(event) => setEditedValues(event.currentTarget.value)}/>
+    const rows = data.map((row) => (
+        <Table.Tr key={row.id}>
+            <Table.Td onDoubleClick={() => setEditingCell({id: row.id, field: 'date'})}>
+                {editingCell && editingCell.id === row.id && editingCell.field === 'date' ? (
+                    <TextInput
+                        value={row.date}
+                        onChange={(event) => handleEdit(row.id, 'date', event.target.value)}
+                        onKeyDown={(event) => handleKeyDown(event, row.id, 'date')}
+                    />
                 ) : (
-                    <Text fz="sm" fw={500}>
-                        {item.date}
-                    </Text>
+                    <Text>{row.date}</Text>
                 )}
             </Table.Td>
 
-            <Table.Td>
-                {editingId === item.id ? (
-                    <TextInput value={item.time}
-                               onChange={(e) => handleEdit(item.id, { time: e.target.value })}/>
+            <Table.Td onDoubleClick={() => setEditingCell({id: row.id, field: 'time'})}>
+                {editingCell && editingCell.id === row.id && editingCell.field === 'time' ? (
+                    <TextInput
+                        value={row.time}
+                        onChange={(event) => handleEdit(row.id, 'time', event.target.value)}
+                        onKeyDown={(event) => handleKeyDown(event, row.id, 'time')}
+                    />
                 ) : (
-                    <Text fz="sm" fw={500}>
-                        {item.time}
-                    </Text>
+                    <Text>{row.time}</Text>
                 )}
             </Table.Td>
 
-            <Table.Td>
-                {editingId === item.id ? (
-                    <TextInput value={item.theme}
-                               onChange={(e) => handleEdit(item.id, { theme: e.target.value })}/>
+            <Table.Td onDoubleClick={() => setEditingCell({id: row.id, field: 'theme'})}>
+                {editingCell && editingCell.id === row.id && editingCell.field === 'theme' ? (
+                    <TextInput
+                        value={row.theme}
+                        onChange={(event) => handleEdit(row.id, 'theme', event.target.value)}
+                        onKeyDown={(event) => handleKeyDown(event, row.id, 'theme')}
+                    />
                 ) : (
-                    <Text fz="sm" fw={500}>
-                        {item.theme}
-                    </Text>
+                    <Text>{row.theme}</Text>
                 )}
             </Table.Td>
 
-            <Table.Td>
-                {editingId === item.id ? (
-                    <TextInput value={item.student}
-                               onChange={(e) => handleEdit(item.id, { student: e.target.value })}/>
+            <Table.Td onDoubleClick={() => setEditingCell({id: row.id, field: 'student'})}>
+                {editingCell && editingCell.id === row.id && editingCell.field === 'student' ? (
+                    <TextInput value={row.student}
+                               onChange={(event) => handleEdit(row.id, 'student', event.target.value)}
+                               onKeyDown={(event) => handleKeyDown(event, row.id, 'student')}/>
                 ) : (
-                    <Text fw={500} fz="sm">
-                        <Link to={"/student_page"} className={classes.link}>
-                            {item.student}
-                        </Link>
-                    </Text>
+                    <Text>{row.student}</Text>
                 )}
             </Table.Td>
 
             <Table.Td>
                 <Group gap={0} justify="flex-end">
-                    {editingId === item.id ? (
-                        <>
-                            <ActionIcon variant="subtle" color="green"
-                                        onClick={() => handleSave(item.id, {...item, data: 'new value'})}>
-                                <IconCheck size="1rem" stroke={1.5}/>
-                            </ActionIcon>
-                            <ActionIcon variant="subtle" color="gray" onClick={handleCancelEdit}>
-                                <IconX size="1rem" stroke={1.5}/>
-                            </ActionIcon>
-                        </>
-                    ) : (
-                        <ActionIcon variant="subtle" color="gray" onClick={() => handleEdit(item.id)}>
-                            <IconEdit size="1rem" stroke={1.5}/>
-                        </ActionIcon>
-                    )}
-                    <ActionIcon variant="subtle" color="red" onClick={() => handleDelete(item.id)}>
+                    <ActionIcon variant="subtle" color="red" onClick={() => handleDelete(row.id)}>
                         <IconTrash size="1rem" stroke={1.5}/>
                     </ActionIcon>
                 </Group>
             </Table.Td>
 
             <Table.Td>
-                <ActionIcon variant="subtle" color="green" onClick={handleAddRow}>
+                <ActionIcon variant="subtle" color="green" onClick={() => handleAddRow(row.id)}>
                     <IconPlus size="1rem" stroke={1.5}/>
                 </ActionIcon>
             </Table.Td>

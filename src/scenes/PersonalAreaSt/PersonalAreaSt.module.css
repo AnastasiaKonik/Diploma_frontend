@@ -4,5 +4,9 @@
 }
 
 .text {
-    color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-gray-1));
+    color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-gray-3));
+}
+
+.main {
+    height: calc(100vh - 120px);
 }

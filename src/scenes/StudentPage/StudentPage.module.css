@@ -8,7 +8,7 @@
 }
 
 .title {
-    color: light-dark(var(--mantine-color-teal-8), var(--mantine-color-teal-9));
+    color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-cyan-7));
 }
 
 .icon {
@@ -17,5 +17,5 @@
 
 .send_btn{
     color: var(--mantine-color-gray-1);
-    background-color: light-dark(var(--mantine-color-teal-8), var(--mantine-color-teal-9));
+    background-color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-cyan-7));
 }

@@ -51,7 +51,7 @@ export const RegistrationTut = () => {
 
 
     return (
-        <Container size={520} my={40}>
+        <Container size={520} my={40} className={classes.main}>
             <Title align="center">
                 Создать аккаунт
             </Title>

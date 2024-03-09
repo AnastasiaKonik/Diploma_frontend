@@ -24,7 +24,7 @@ export const Login = () => {
     };
 
     return (
-        <Container size={520} my={40}>
+        <Container size={520} my={40} className={classes.main}>
             <Title align="center">
                 Войти в личный кабинет
             </Title>
@@ -44,8 +44,8 @@ export const Login = () => {
                         {...form.getInputProps('password')}
                         required
                     />
-                    <Button fullWidth mt="xl" className={classes.login_btn} type="submit"
-                            onClick={() => routeChangeLogin()}>
+                    <Button fullWidth mt="xl" className={classes.login_btn} type="submit">
+                            {/*onClick={() => routeChangeLogin()}>*/}
                         Войти
                     </Button>
                 </form>
