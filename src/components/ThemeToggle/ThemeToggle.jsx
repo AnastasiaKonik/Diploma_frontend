@@ -1,9 +1,12 @@
 import React from "react";
+
 import { ActionIcon } from "@mantine/core";
+
 import { IconMoon, IconSun } from "@tabler/icons-react";
 import clsx from "clsx";
 
 import { useColorScheme } from "./hooks";
+
 import classes from "./ThemeToggle.module.css"
 
 export const ThemeToggle = () => {

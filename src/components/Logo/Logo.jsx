@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Text } from "@mantine/core";
 
 export const Logo = (props) => {

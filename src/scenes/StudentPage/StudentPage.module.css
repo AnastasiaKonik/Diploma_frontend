@@ -19,3 +19,7 @@
     color: var(--mantine-color-gray-1);
     background-color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-cyan-7));
 }
+
+.main{
+    height: calc(100vh - 140px);
+}
