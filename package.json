@@ -20,7 +20,9 @@
     "clsx": "^2.1.0",
     "compressorjs": "^1.2.1",
     "dayjs": "^1.11.10",
+    "http-status-codes": "^2.3.0",
     "react": "^18.2.0",
+    "react-admin": "^4.16.13",
     "react-dom": "^18.2.0",
     "react-imask": "^7.4.0",
     "react-router-dom": "^6.22.1"

@@ -1,20 +1,43 @@
-import React from "react";
-import {Link, Outlet} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {Link, Outlet, useLocation} from "react-router-dom";
+
 import {AppShell, Burger, Group} from "@mantine/core";
 import {useDisclosure} from "@mantine/hooks";
 
-import classes from "./Root.module.css";
 import {ThemeToggle} from "./components/ThemeToggle";
 import {Footer} from "./components/Footer";
 import {Logo} from "./components/Logo";
 
+import authProvider from "./authProvider.jsx";
+import classes from "./Root.module.css";
+
 const Root = () => {
     const [opened, {toggle, close}] = useDisclosure();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    const location = useLocation()
+    useEffect(() => {
+        authProvider.checkAuth()
+            .then(() => {
+                setIsLoggedIn(true);
+            })
+            .catch(() => {
+                setIsLoggedIn(false);
+            });
+    }, [location]);
+
+    const handleLogout = () => {
+        authProvider.logout().then(() => {
+            setIsLoggedIn(false);
+        });
+    };
+
     return (
         <AppShell
             header={{height: 60}}
             navbar={{width: 300, breakpoint: "sm", collapsed: {desktop: true, mobile: !opened}}}
         >
+
             <AppShell.Header>
                 <Group h="100%" px="md">
                     <Burger
@@ -27,12 +50,22 @@ const Root = () => {
                     <Group justify="space-between" style={{flex: 1}}>
                         <Logo/>
                         <Group ml="xl" gap={0} visibleFrom="sm">
-                            <Link className={classes.control} to="/" onClick={close}>
-                                На главную
-                            </Link>
-                            <Link className={classes.control} to="/login">
-                                Войти в систему
-                            </Link>
+                            {isLoggedIn ? (
+                                <>
+                                    <Link className={classes.control} to="/" onClick={() => {handleLogout(); close()}}>
+                                        Выйти из системы
+                                    </Link>
+                                </>
+                            ) : (
+                                <>
+                                    <Link className={classes.control} to="/" onClick={close}>
+                                        На главную
+                                    </Link>
+                                    <Link className={classes.control} to="/login" onClick={close}>
+                                        Войти в систему
+                                    </Link>
+                                </>
+                            )}
                             <ThemeToggle/>
                         </Group>
                     </Group>
@@ -40,12 +73,22 @@ const Root = () => {
             </AppShell.Header>
 
             <AppShell.Navbar py="md" px={4}>
-                <Link className={classes.control} to="/" onClick={close}>
-                    На главную
-                </Link>
-                <Link className={classes.control} to="/login" onClick={close}>
-                    Войти в систему
-                </Link>
+                {isLoggedIn ? (
+                    <>
+                        <Link className={classes.control} to="/" onClick={() => {handleLogout(); close()}}>
+                            Выйти из системы
+                        </Link>
+                    </>
+                ) : (
+                    <>
+                        <Link className={classes.control} to="/" onClick={close}>
+                            На главную
+                        </Link>
+                        <Link className={classes.control} to="/login" onClick={close}>
+                            Войти в систему
+                        </Link>
+                    </>
+                )}
                 <ThemeToggle/>
             </AppShell.Navbar>
 
@@ -59,5 +102,8 @@ const Root = () => {
 };
 
 export default Root;
+
+
+
 
 

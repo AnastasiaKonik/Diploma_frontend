@@ -1,53 +1,79 @@
 import React, {useState} from "react";
-import {Container, Title, Button, PasswordInput, TextInput, Paper, Popover, Progress} from "@mantine/core";
+import {useNavigate} from "react-router-dom";
 import {IMaskInput} from 'react-imask';
 
-import classes from "./RegistrationSt.module.css";
+import {Container, Title, Button, PasswordInput, TextInput, Paper, Popover, Progress, Text, Group} from "@mantine/core";
 import {matches, useForm} from "@mantine/form";
-import {getStrength, PasswordRequirement} from "../hooks/index.js";
+
+
+import authProvider from "../../authProvider.jsx";
+import classes from "./RegistrationSt.module.css";
+import {getStrength, PasswordRequirement, requirements} from "../hooks/index.js";
+
 
 export const RegistrationSt = () => {
-    const requirements = [
-        {re: /[0-9]/, label: 'Содержит число'},
-        {re: /[a-z]/, label: 'Содержит латинскую букву в нижнем регистре'},
-        {re: /[A-Z]/, label: 'Содержит латинскую букву в верхнем регистре'},
-    ];
-
+    const [password, setPassword] = useState("")
     const [popoverOpened, setPopoverOpened] = useState(false);
-    const [value, setValue] = useState('');
-    // const [value2, setValue2] = useState('');
-    const checks = requirements.map((requirement, index) => (
-        <PasswordRequirement key={index} label={requirement.label} meets={requirement.re.test(value)}/>
-    ));
 
-    const strength = getStrength(value);
+    const checks = requirements.map((requirement, index) => (
+        <PasswordRequirement key={index} label={requirement.label}
+                             meets={requirement.re.test(password)}/>
+    ));
+    const strength = getStrength(password);
     const color = strength === 100 ? 'teal' : strength > 50 ? 'yellow' : 'red';
 
 
     const form = useForm({
         initialValues: {
-            name: '',
-            lastname: '',
+            first_name: '',
+            last_name: '',
             patronymic: '',
-            login: '',
-            // confirmPassword: '',
+            username: '',
             phone: '',
             grade: '',
         },
 
         validate: {
-            name: (value) => (value.length > 64 ? 'Имя должно быть менее 64 символов' : null),
-            lastname: (value) => (value.length > 64 ? 'Фамилия должна быть менее 64 символов' : null),
+            first_name: (value) => (value.length > 64 ? 'Имя должно быть менее 64 символов' : null),
+            last_name: (value) => (value.length > 64 ? 'Фамилия должна быть менее 64 символов' : null),
             patronymic: (value) => (value.length > 64 ? 'Отчество должно быть менее 64 символов' : null),
-            login: matches(/^([a-zA-Z0-9]){4,12}$/, 'Логин должен содержать от 4 до 12 символов латиницей ' +
+            username: matches(/^([a-zA-Z0-9]){4,12}$/, 'Логин должен содержать от 4 до 12 символов латиницей ' +
                 'или цифр'),
-            // confirmPassword: (value2, value1) =>
-            //     value2 !== value1 ? 'Пароли не совпадают' : null,
             phone: (value) => (value.length !== 18 ? 'Номер введен некорректно' : null),
             grade: matches(/^\b([1-9]|1[0-1])\b/, 'Класс от 1 до 11'),
 
         },
     });
+
+
+    const navigate = useNavigate();
+    const handleSubmit = async (values) => {
+        values["password"] = password
+        values["role"] = "ST"
+        let grade = values.grade
+        delete values.grade
+
+        await authProvider.createUser(values)
+            .then()
+            .catch((reason) => {
+                console.log(reason)
+            })
+
+        await authProvider.login({username: values.username, password: values.password})
+            .then((redirectPath) => {
+                navigate(redirectPath)
+            })
+            .catch((reason) => {
+                console.log(reason)
+                form.setErrors({"login-failed": `Не удалось войти: ${reason}`})
+            })
+
+        await authProvider.postStudentInfo(grade)
+            .then()
+            .catch((reason) => {
+                console.log(reason)
+            })
+    };
 
     return (
         <Container size={520} my={40} className={classes.main}>
@@ -56,12 +82,12 @@ export const RegistrationSt = () => {
             </Title>
 
             <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-                <form onSubmit={form.onSubmit(console.log)}>
+                <form onSubmit={form.onSubmit(handleSubmit)}>
                     <TextInput
                         p={5}
                         label="Логин"
                         placeholder="Придумайте логин"
-                        {...form.getInputProps('login')}
+                        {...form.getInputProps('username')}
                         required/>
                     <Popover opened={popoverOpened} position="bottom" width="target"
                              transitionProps={{transition: 'pop'}}>
@@ -72,16 +98,15 @@ export const RegistrationSt = () => {
                                 p={5}
                                 label="Пароль"
                                 placeholder="Ваш пароль"
-                                value={value}
-                                onChange={(event) => setValue(event.currentTarget.value)}
-                                /*{...form.getInputProps('password')}*/
+                                value={password || ''}
+                                onChange={event => setPassword(event.target.value)}
                                 required
                             />
                         </Popover.Target>
                         <Popover.Dropdown>
                             <Progress color={color} value={strength} size={5} mb="xs"/>
-                            <PasswordRequirement label="От 8 до 128 символов" meets={value.length > 7
-                                && value.length < 128}/>
+                            <PasswordRequirement label="От 8 до 128 символов"
+                                                 meets={password.length > 7 && password.length < 128}/>
                             {checks}
                         </Popover.Dropdown>
                     </Popover>
@@ -89,13 +114,13 @@ export const RegistrationSt = () => {
                         p={5}
                         label="Имя"
                         placeholder="Ваше имя"
-                        {...form.getInputProps('name')}
+                        {...form.getInputProps('first_name')}
                         required/>
                     <TextInput
                         p={5}
                         label="Фамилия"
                         placeholder="Ваша фамилия"
-                        {...form.getInputProps('lastname')}
+                        {...form.getInputProps('last_name')}
                         required/>
                     <TextInput
                         p={5}
@@ -116,11 +141,25 @@ export const RegistrationSt = () => {
                         placeholder="Номер телефона"
                         {...form.getInputProps('phone')}
                         required/>
-                    <Button type="submit" fullWidth mt="xl" className={classes.reg_btn} variant="filled">
-                        Подтвердить
-                    </Button>
+                    <Group justify="center">
+                        {["login-failed"].map((errorKey) => (
+                            <Text
+                                key={errorKey}
+                                c="var(--mantine-color-error)"
+                                fz="sm"
+                                style={{textIndent: 0}}
+                            >
+                                {form.errors[errorKey]}
+                            </Text>
+                        ))
+                        }
+                        <Button type="submit" fullWidth mt="sm" className={classes.reg_btn} variant="filled">
+                            Подтвердить
+                        </Button>
+                    </Group>
                 </form>
             </Paper>
+
         </Container>
     );
 };

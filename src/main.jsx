@@ -1,18 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.layer.css";
 import "@mantine/dropzone/styles.css";
 
 import { theme } from "./theme";
-import {Home, RegistrationTut, RegistrationSt} from "./scenes";
+
 import Root from "./Root";
+import {Home, RegistrationTut, RegistrationSt} from "./scenes";
 import {Login} from "./scenes/Login/index.js";
-import {PersonalAreaSt} from "./scenes/PersonalAreaSt/index.js";
-import {PersonalAreaTut} from "./scenes/PersonalAreaTut/index.js";
 import {StudentPage} from "./scenes/StudentPage/index.js";
+import {PersonalAreas} from "./scenes/PersonalAreas/index.js";
+
+// export const ApiPath2 = "http://api/v0/"
+export const ApiPath = "http://localhost:8000/api"
 
 const router = createBrowserRouter([
     {
@@ -36,12 +39,8 @@ const router = createBrowserRouter([
                 element: <Login />,
             },
             {
-                path: "/lk_student",
-                element: <PersonalAreaSt />,
-            },
-            {
-                path: "/lk_tutor",
-                element: <PersonalAreaTut />,
+                path: "/profile",
+                element: <PersonalAreas />,
             },
             {
                 path: "/student_page",
