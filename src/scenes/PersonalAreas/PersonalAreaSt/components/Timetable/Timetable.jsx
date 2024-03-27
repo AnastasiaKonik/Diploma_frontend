@@ -1,4 +1,5 @@
 import {Table, Text, Anchor} from '@mantine/core';
+
 import classes from "./Timetable.module.css";
 
 const data = [
@@ -58,6 +59,7 @@ export function TimetableSt() {
         <Table.ScrollContainer minWidth={800} type="native">
             <Table verticalSpacing="sm" horizontalSpacing="xl" withTableBorder align="center" w="auto" mb="lg">
                 <Table.Thead className={classes.tableHeader}>
+
                     <Table.Tr>
                         <Table.Th>День занятия</Table.Th>
                         <Table.Th>Время</Table.Th>
@@ -66,6 +68,7 @@ export function TimetableSt() {
                         <Table.Th>Репетитор</Table.Th>
                         <Table.Th>Контакты</Table.Th>
                     </Table.Tr>
+
                 </Table.Thead>
                 <Table.Tbody>{rows}</Table.Tbody>
             </Table>

@@ -1,9 +1,10 @@
 import React from "react";
+import {useNavigate} from "react-router-dom";
+
 import {Container, Title, Text, Stack, Paper, Button, Group} from "@mantine/core";
 
-import classes from "./Home.module.css";
 import {Logo} from "../../components/Logo";
-import {useNavigate} from "react-router-dom";
+import classes from "./Home.module.css";
 
 export const Home = () => {
     let navigate = useNavigate();
@@ -18,7 +19,9 @@ export const Home = () => {
 
     return (
         <Container fluid className={classes.main}>
+
             <Container p="xl" w="fit-content">
+
                 <Paper shadow="md" withBorder={true} p="xl" className={classes.paper}>
                     <Stack justify="center">
                         <Title ta="center" order={1} mb="md">
@@ -39,7 +42,9 @@ export const Home = () => {
                         </Group>
                     </Stack>
                 </Paper>
+
             </Container>
+
         </Container>
     );
 };

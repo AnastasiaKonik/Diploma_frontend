@@ -1,8 +1,9 @@
 import React, {useState} from "react";
-import {Box, Button, FileButton, Group, Image, Stack, Text, Title} from "@mantine/core";
-import classes from "../StudentPage.module.css";
-import {Dropzone} from "./Dropzone.jsx";
+
+import {Box, Button, FileButton, Group, Image, Stack, Text} from "@mantine/core";
 import {MIME_TYPES} from "@mantine/dropzone";
+
+import {Dropzone} from "./Dropzone.jsx";
 
 const handleSaveImages = async (files) => {
     try {

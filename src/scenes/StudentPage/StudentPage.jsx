@@ -1,19 +1,13 @@
-import {
-    ActionIcon,
-    Box,
-    Button,
-    Container,
-    Group, Paper, Stack,
-    Text,
-    TextInput,
-    Title,
-} from '@mantine/core';
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
+
+import {ActionIcon, Box, Button, Container, Group, Paper, Stack, Text, TextInput, Title} from '@mantine/core';
+
 import {HandleFiles} from "./components";
-import classes from "./StudentPage.module.css";
+
 import {IconCheck, IconEdit, IconSchool, IconUser} from "@tabler/icons-react";
 
+import classes from "./StudentPage.module.css";
 
 export function StudentPage() {
     let navigate = useNavigate();
@@ -38,7 +32,7 @@ export function StudentPage() {
 
     const handleThemeSubmit = () => {
         setIsThemeEditing(false);
-        // Save the changes or perform any required actions here
+        //TODO: Save the changes or perform any required actions here
     };
 
     const handleTaskClick = () => {
@@ -51,11 +45,12 @@ export function StudentPage() {
 
     const handleTaskSubmit = () => {
         setIsTaskEditing(false);
-        // Save the changes or perform any required actions here
+        //TODO: Save the changes or perform any required actions here
     };
 
     return (
         <Container fluid maw={1400}>
+
             <Box px="md" mx="auto" pt="xs" mb="md">
                 <Title order={1} mb="lg" align="center" className={classes.text}>Страница ученика</Title>
 
@@ -147,6 +142,7 @@ export function StudentPage() {
                     Назад
                 </Button>
             </Box>
+
         </Container>
     );
 }

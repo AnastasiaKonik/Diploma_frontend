@@ -1,5 +1,7 @@
 import React from "react";
+
 import {Card, Text, Group} from "@mantine/core";
+
 import classes from "./Homework.module.css";
 
 export const Homework = () => {

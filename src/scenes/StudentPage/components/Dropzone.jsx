@@ -1,16 +1,18 @@
 import React, { useRef } from "react";
+
 import { Button, Group, Stack, Text, rem } from "@mantine/core";
-import { IconUpload, IconPhoto, IconX } from "@tabler/icons-react";
 import {Dropzone as MantineDropzone, MIME_TYPES} from "@mantine/dropzone";
+
+import { IconUpload, IconPhoto, IconX } from "@tabler/icons-react";
 
 export const Dropzone = ({ onDrop, error, ...rest }) => {
     const openRef = useRef(null);
+
     return (
         <>
             <MantineDropzone
                 openRef={openRef}
                 onReject={(files) => console.log("rejected files", files)}
-                // maxSize={10 * 1024 ** 2}
                 accept={[MIME_TYPES.png,
                     MIME_TYPES.pdf,
                     MIME_TYPES.docx,

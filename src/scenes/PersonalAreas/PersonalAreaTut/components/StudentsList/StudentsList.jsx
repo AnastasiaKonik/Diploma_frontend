@@ -1,8 +1,11 @@
-import {ActionIcon, Button, Group, List, Text, TextInput} from '@mantine/core';
-import classes from "./StudentsList.module.css";
 import {Link} from "react-router-dom";
 import {useState} from "react";
+
+import {ActionIcon, Button, Group, List, Text, TextInput} from '@mantine/core';
+
 import {IconArchive, IconArchiveOff} from "@tabler/icons-react";
+
+import classes from "./StudentsList.module.css";
 
 const initialStudents = [
     {
@@ -16,7 +19,6 @@ const initialStudents = [
 ];
 
 export function StudentsList() {
-
     const [students, setStudents] = useState(initialStudents);
     const [newStudentName, setNewStudentName] = useState('');
 
@@ -52,10 +54,10 @@ export function StudentsList() {
 
     return (
         <div>
-
             <List size="md" spacing="xs" type="ordered">
                 {students.map((student, index) => (
                     <List.Item key={index}>
+
                         <Group gap={0} justify="flex-end">
                             <Text fw={500} className={classes.text}
                                   style={{color: student.archived ? 'gray' : 'inherit'}}>
@@ -89,7 +91,9 @@ export function StudentsList() {
                                     <IconArchive size="1rem" stroke={1.5}/>
                                 </ActionIcon>
                             )}
+
                         </Group>
+
                     </List.Item>
                 ))}
             </List>

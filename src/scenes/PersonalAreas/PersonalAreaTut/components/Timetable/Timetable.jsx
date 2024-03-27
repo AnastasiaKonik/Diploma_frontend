@@ -1,11 +1,12 @@
-import {Table, Text, Group, ActionIcon, TextInput} from '@mantine/core';
-import classes from "./Timetable.module.css";
-import {Link} from "react-router-dom";
-import {IconCheck, IconEdit, IconPlus, IconTrash, IconX} from "@tabler/icons-react";
 import {useState} from "react";
 
-// TODO: strange behavior when deleting and adding rows
+import {Table, Text, Group, ActionIcon, TextInput} from '@mantine/core';
 
+import {IconPlus, IconTrash} from "@tabler/icons-react";
+
+import classes from "./Timetable.module.css";
+
+// TODO: strange behavior when deleting and adding rows
 export function TimetableTut() {
     const [data, setData] = useState([
         {
@@ -69,6 +70,7 @@ export function TimetableTut() {
 
     const rows = data.map((row) => (
         <Table.Tr key={row.id}>
+
             <Table.Td onDoubleClick={() => setEditingCell({id: row.id, field: 'date'})}>
                 {editingCell && editingCell.id === row.id && editingCell.field === 'date' ? (
                     <TextInput
@@ -136,6 +138,7 @@ export function TimetableTut() {
         <Table.ScrollContainer minWidth={800} type="native">
             <Table verticalSpacing="sm" horizontalSpacing="xl" withTableBorder align="center" w="auto" mb="lg">
                 <Table.Thead className={classes.tableHeader}>
+
                     <Table.Tr>
                         <Table.Th>День занятия</Table.Th>
                         <Table.Th>Время</Table.Th>
@@ -144,6 +147,7 @@ export function TimetableTut() {
                         <Table.Th/>
                         <Table.Th/>
                     </Table.Tr>
+
                 </Table.Thead>
                 <Table.Tbody>{rows}</Table.Tbody>
             </Table>
