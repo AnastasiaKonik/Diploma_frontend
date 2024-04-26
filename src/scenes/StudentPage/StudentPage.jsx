@@ -5,7 +5,7 @@ import {ActionIcon, Box, Button, Container, Group, Paper, Stack, Text, TextInput
 
 import {HandleFiles} from "./components";
 
-import {IconCheck, IconEdit, IconSchool, IconUser} from "@tabler/icons-react";
+import {IconCheck, IconEdit, IconPhone, IconSchool, IconUser} from "@tabler/icons-react";
 
 import authProvider from "../../authProvider.jsx";
 import classes from "./StudentPage.module.css";
@@ -18,6 +18,40 @@ export function StudentPage() {
     };
 
     const [isTutor, setIsTutor] = useState(false);
+    const [userData, setUserData] = useState({
+        id: null,
+        subject: null,
+    })
+
+    useEffect(() => {
+        authProvider.getTutorInfo()
+            .then((tutorData) => {
+                setUserData({
+                    id: tutorData.id,
+                    subject: tutorData.subject
+                });
+
+                fetch(`http://localhost:3030/lessons/${tutorData.id}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        const theme = data.theme; // Assuming there is only one lesson for the tutor
+                        if (theme) {
+                            setTheme(theme);
+                        } else {
+                            console.log("Lesson not found for tutor ID:", tutorData.id);
+                        }
+                    })
+                    .catch((error) => console.log("Error fetching lesson:", error));
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }, []);
 
     useEffect(() => {
         authProvider.checkAuth()
@@ -40,7 +74,8 @@ export function StudentPage() {
     }, []);
 
     const [isThemeEditing, setIsThemeEditing] = useState(false);
-    const [theme, setTheme] = useState("Тригонометрия");
+    const [theme, setTheme] = useState("");
+
 
     const [isTaskEditing, setIsTaskEditing] = useState(false);
     const [task, setTask] = useState("");
@@ -55,7 +90,15 @@ export function StudentPage() {
 
     const handleThemeSubmit = () => {
         setIsThemeEditing(false);
-        //TODO: Save the changes or perform any required actions here
+        fetch(`http://localhost:3030/lessons/${userData.id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({theme: theme}),
+        })
+            .then((response) => response.json())
+            .catch((error) => console.log("error", error));
     };
 
     const handleTaskClick = () => {
@@ -92,6 +135,12 @@ export function StudentPage() {
                                         10 класс
                                     </Text>
                                 </Group>
+                                <Group wrap="nowrap">
+                                    <IconPhone stroke={1.5} size="1rem" className={classes.icon}/>
+                                    <Text fz="xl" className={classes.text}>
+                                        +7 (924) 432-38-48
+                                    </Text>
+                                </Group>
                             </div>
 
                             <Title order={2} mb="sm" mt="lg" className={classes.title}>Материалы для занятий</Title>
@@ -112,7 +161,12 @@ export function StudentPage() {
                                             </>
                                         ) : (
                                             <>
-                                                <Text fz="lg" className={classes.text}>{theme}</Text>
+                                                <Paper withBorder p="xs" shadow="md" miw={250}>
+                                                    <Text
+                                                        fz="md"
+                                                        className={classes.text}>{theme}
+                                                    </Text>
+                                                </Paper>
                                                 <ActionIcon variant="subtle" color="gray" onClick={handleThemeClick}>
                                                     <IconEdit size="1rem" stroke={1.5}/>
                                                 </ActionIcon>
@@ -169,9 +223,11 @@ export function StudentPage() {
                     </>
                 ) :
                 (
-                    <h2>
-                        У вас нет доступа к странице ученика
-                    </h2>
+                    <Container className={classes.main}>
+                        <h2>
+                            У вас нет доступа к странице ученика
+                        </h2>
+                    </Container>
                 )
             }
         </Container>

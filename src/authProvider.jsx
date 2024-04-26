@@ -86,6 +86,59 @@ const authProvider = {
                 console.log(reason)
             })
     },
+    getStudentInfo: () => {
+        return fetch(`${ApiPath}/users/student_info`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("access-token")}`
+            }
+        }).then(resp => {
+            switch (resp.status) {
+                case StatusCodes.INTERNAL_SERVER_ERROR:
+                    throw new Error("Ошибка сервера")
+                case StatusCodes.UNAUTHORIZED:
+                    throw new Error("Истек токен доступа")
+                case StatusCodes.FORBIDDEN:
+                    throw new Error("Нет прав доступа")
+                case StatusCodes.GATEWAY_TIMEOUT:
+                    throw new Error("Сервер временно недоступен")
+                case StatusCodes.OK:
+                    return resp.json()
+                default:
+                    throw new Error("Сервер недоступен")
+            }
+        })
+            .then((json) => {
+                localStorage.setItem("grade", json.grade);
+                localStorage.setItem("id", json.user);
+                return Promise.resolve({
+                    grade: localStorage.getItem('grade'),
+                    id: localStorage.getItem('id'),
+                })
+            })
+    },
+    patchStudentGrade: (grade) => {
+        return fetch(`${ApiPath}/users/student_info`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("access-token")}`
+            },
+            body: JSON.stringify({"grade": grade}),
+        }).then(resp => {
+            if (!resp.ok) {
+                return Promise.reject("Ошибка сервера")
+            }
+            return resp.json()
+        }, () => Promise.reject("Неизвестная ошибка"))
+            .then(() => {
+                return Promise.resolve()
+            })
+            .catch((reason) => {
+                console.log(reason)
+            })
+    },
     postTutorInfo: (subject) => {
         return fetch(`${ApiPath}/users/tutor_info`, {
             method: "POST",
@@ -105,6 +158,59 @@ const authProvider = {
             })
             .catch((reason) => {
                 console.log(reason)
+            })
+    },
+    patchUserPhone: (phone) => {
+        return fetch(`${ApiPath}/users/full_info`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("access-token")}`
+            },
+            body: JSON.stringify({"phone": phone}),
+        }).then(resp => {
+            if (!resp.ok) {
+                return Promise.reject("Ошибка сервера")
+            }
+            return resp.json()
+        }, () => Promise.reject("Неизвестная ошибка"))
+            .then(() => {
+                return Promise.resolve()
+            })
+            .catch((reason) => {
+                console.log(reason)
+            })
+    },
+    getTutorInfo: () => {
+        return fetch(`${ApiPath}/users/tutor_info`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("access-token")}`
+            }
+        }).then(resp => {
+            switch (resp.status) {
+                case StatusCodes.INTERNAL_SERVER_ERROR:
+                    throw new Error("Ошибка сервера")
+                case StatusCodes.UNAUTHORIZED:
+                    throw new Error("Истек токен доступа")
+                case StatusCodes.FORBIDDEN:
+                    throw new Error("Нет прав доступа")
+                case StatusCodes.GATEWAY_TIMEOUT:
+                    throw new Error("Сервер временно недоступен")
+                case StatusCodes.OK:
+                    return resp.json()
+                default:
+                    throw new Error("Сервер недоступен")
+            }
+        })
+            .then((json) => {
+                localStorage.setItem("subject", json.subject);
+                localStorage.setItem("id", json.user);
+                return Promise.resolve({
+                    subject: localStorage.getItem('subject'),
+                    id: localStorage.getItem('id'),
+                })
             })
     },
     getIdentity: () => {

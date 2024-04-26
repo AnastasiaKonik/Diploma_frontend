@@ -10,3 +10,7 @@
 .badge {
     background-color: var(--mantine-color-indigo-6);
 }
+
+.main {
+    height: calc(100vh - 120px)
+}

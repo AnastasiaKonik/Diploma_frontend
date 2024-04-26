@@ -14,7 +14,6 @@ import {Login} from "./scenes/Login/index.js";
 import {StudentPage} from "./scenes/StudentPage/index.js";
 import {PersonalAreas} from "./scenes/PersonalAreas/index.js";
 
-// export const ApiPath2 = "http://api/v0/"
 export const ApiPath = "http://localhost:8000/api"
 
 const router = createBrowserRouter([

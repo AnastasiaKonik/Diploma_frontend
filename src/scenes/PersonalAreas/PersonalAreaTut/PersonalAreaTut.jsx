@@ -11,7 +11,7 @@ import classes from "./PersonalAreaTut.module.css";
 export function PersonalAreaTut() {
 
     return (
-        <Container fluid maw={1400}>
+        <Container fluid maw={1400} className={classes.main}>
 
             <Box px="md" mx="auto" pt="xs" mb="md">
                 <Title order={1} align="center" className={classes.text}>Личный кабинет</Title>

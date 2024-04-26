@@ -1,14 +1,11 @@
 import {useEffect, useState} from "react";
 import {IMaskInput} from "react-imask";
-import {useLocation} from "react-router-dom";
 
 import {ActionIcon, Group, Text, TextInput} from "@mantine/core";
 
 import {IconCheck, IconEdit, IconPhoneCall, IconSchool, IconUser} from "@tabler/icons-react";
-import {StatusCodes} from "http-status-codes";
 
 import authProvider from "../../../../../authProvider.jsx";
-import {ApiPath} from "../../../../../main.jsx";
 import classes from "./StudentInfo.module.css";
 
 
@@ -20,56 +17,35 @@ export function StudentInfo() {
         last_name: null,
         patronymic: null,
         phone: null,
-        grade: null
+        grade: null,
+        id: null,
     });
 
-    const location = useLocation()
-    //TODO
     useEffect(() => {
-        fetch(`${ApiPath}/users/student_info`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("access-token")}`
-            }
-        }).then(resp => {
-            switch (resp.status) {
-                case StatusCodes.INTERNAL_SERVER_ERROR:
-                    throw new Error("Ошибка сервера")
-                case StatusCodes.UNAUTHORIZED:
-                    throw new Error("Истек токен доступа")
-                case StatusCodes.FORBIDDEN:
-                    throw new Error("Нет прав доступа")
-                case StatusCodes.GATEWAY_TIMEOUT:
-                    throw new Error("Сервер временно недоступен")
-                case StatusCodes.OK:
-                    return resp.json()
-                default:
-                    throw new Error("Сервер недоступен")
-            }
-        }, () => Promise.reject("Неизвестная ошибка"))
-            .then((json) => {
+        authProvider.getIdentity()
+            .then((identityData) => {
                 setUserData(prevUserData => ({
-                    ...prevUserData || {},
-                    grade: json["grade"]
+                    ...prevUserData,
+                    first_name: identityData.first_name,
+                    last_name: identityData.last_name,
+                    patronymic: identityData.patronymic || null,
+                    phone: identityData.phone
                 }));
             })
             .catch(error => {
                 console.error(error);
             });
-    }, [location]);
-
+    }, []);
 
     useEffect(() => {
-        authProvider.getIdentity()
-            .then((identityData => {
-                setUserData({
-                    first_name: identityData.first_name,
-                    last_name: identityData.last_name,
-                    patronymic: identityData.patronymic || null,
-                    phone: identityData.phone
-                });
-            }))
+        authProvider.getStudentInfo()
+            .then((studentData) => {
+                setUserData(prevUserData => ({
+                    ...prevUserData,
+                    grade: studentData.grade,
+                    id: studentData.id
+                }));
+            })
             .catch(error => {
                 console.error(error);
             });
@@ -83,19 +59,33 @@ export function StudentInfo() {
     };
 
     const handleChangePhone = (event) => {
-        setUserData["phone"](event.target.value);
+        setUserData(prevUserData => ({
+            ...prevUserData,
+            phone: event.target.value
+        }))
     };
     const handleChangeGrade = (event) => {
-        setUserData["grade"](event.target.value);
+        setUserData((prevUserData) => ({
+            ...prevUserData,
+            grade: event.target.value
+        }));
     };
 
     const handlePhoneSubmit = () => {
         setIsPhoneEditing(false);
-        //TODO Save the changes or perform any required actions here
+        authProvider.patchUserPhone(userData.phone)
+            .then()
+            .catch((reason) => {
+                console.log(reason)
+            })
     };
     const handleGradeSubmit = () => {
         setIsGradeEditing(false);
-        //TODO Save the changes or perform any required actions here
+        authProvider.patchStudentGrade(userData.grade)
+            .then()
+            .catch((reason) => {
+                console.log(reason)
+            })
     };
 
     return (
@@ -112,9 +102,7 @@ export function StudentInfo() {
                 {isPhoneEditing ? (
                     <>
                         <TextInput
-                            minlength="18"
-                            maxlength="18"
-                            value= {userData.phone}
+                            value={userData.phone}
                             component={IMaskInput}
                             mask="+7 (000) 000-00-00"
                             onChange={handleChangePhone}

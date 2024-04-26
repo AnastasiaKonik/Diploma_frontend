@@ -3,11 +3,9 @@ import {IMaskInput} from "react-imask";
 
 import {ActionIcon, Group, Text, TextInput} from "@mantine/core";
 
-import {StatusCodes} from "http-status-codes";
-import {IconCheck, IconEdit, IconPhoneCall, IconUser} from "@tabler/icons-react";
+import {IconBook, IconCheck, IconEdit, IconPhoneCall, IconUser} from "@tabler/icons-react";
 
 import authProvider from "../../../../../authProvider.jsx";
-import {ApiPath} from "../../../../../main.jsx";
 import classes from "./TutorInfo.module.css";
 
 export function TutorInfo() {
@@ -17,37 +15,18 @@ export function TutorInfo() {
         last_name: null,
         patronymic: null,
         phone: null,
-        subject: null
+        id: null,
     });
 
-    //TODO: put in right place or don't use
     useEffect(() => {
-        fetch(`${ApiPath}/users/tutor_info`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("access-token")}`
-            }
-        }).then(resp => {
-            switch (resp.status) {
-                case StatusCodes.INTERNAL_SERVER_ERROR:
-                    throw new Error("Ошибка сервера")
-                case StatusCodes.UNAUTHORIZED:
-                    throw new Error("Истек токен доступа")
-                case StatusCodes.FORBIDDEN:
-                    throw new Error("Нет прав доступа")
-                case StatusCodes.GATEWAY_TIMEOUT:
-                    throw new Error("Сервер временно недоступен")
-                case StatusCodes.OK:
-                    return resp.json()
-                default:
-                    throw new Error("Сервер недоступен")
-            }
-        }, () => Promise.reject("Неизвестная ошибка"))
-            .then((json) => {
+        authProvider.getIdentity()
+            .then((identityData) => {
                 setUserData(prevUserData => ({
-                    ...prevUserData || {},
-                    grade: json["subject"]
+                    ...prevUserData,
+                    first_name: identityData.first_name,
+                    last_name: identityData.last_name,
+                    patronymic: identityData.patronymic || null,
+                    phone: identityData.phone
                 }));
             })
             .catch(error => {
@@ -56,15 +35,14 @@ export function TutorInfo() {
     }, []);
 
     useEffect(() => {
-        authProvider.getIdentity()
-            .then((identityData => {
-                setUserData({
-                    first_name: identityData.first_name,
-                    last_name: identityData.last_name,
-                    patronymic: identityData.patronymic || null,
-                    phone: identityData.phone
-                });
-            }))
+        authProvider.getTutorInfo()
+            .then((tutorData) => {
+                setUserData(prevUserData => ({
+                    ...prevUserData,
+                    subject: tutorData.subject,
+                    id: tutorData.id
+                }));
+            })
             .catch(error => {
                 console.error(error);
             });
@@ -75,12 +53,19 @@ export function TutorInfo() {
     };
 
     const handleChangePhone = (event) => {
-        setUserData["phone"](event.target.value);
+        setUserData(prevUserData => ({
+            ...prevUserData,
+            phone: event.target.value
+        }))
     };
 
     const handlePhoneSubmit = () => {
         setIsPhoneEditing(false);
-        //TODO: Save the changes or perform any required actions here
+        authProvider.patchUserPhone(userData.phone)
+            .then()
+            .catch((reason) => {
+                console.log(reason)
+            })
     };
 
     return (
@@ -93,13 +78,17 @@ export function TutorInfo() {
             </Group>
 
             <Group wrap="nowrap" gap={10} mt={5}>
+                <IconBook stroke={1.5} size="1rem" className={classes.icon}/>
+                <Text fz="xl" className={classes.text}>
+                    Предмет преподавания: {userData.subject}
+                </Text>
+            </Group>
+
+            <Group wrap="nowrap" gap={10} mt={5}>
                 <IconPhoneCall stroke={1.5} size="1rem" className={classes.icon}/>
                 {isPhoneEditing ? (
                     <>
                         <TextInput
-
-                            minlength="18"
-                            maxlength="18"
                             value={userData.phone}
                             component={IMaskInput}
                             mask="+7 (000) 000-00-00"
