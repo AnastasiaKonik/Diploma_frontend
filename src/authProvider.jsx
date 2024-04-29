@@ -243,6 +243,7 @@ const authProvider = {
                 localStorage.setItem("last_name", json.last_name);
                 localStorage.setItem("patronymic", json.patronymic);
                 localStorage.setItem("role", json.role);
+                localStorage.setItem("login", json.username);
                 return Promise.resolve({
                     phone: localStorage.getItem('phone'),
                     first_name: localStorage.getItem('first_name'),

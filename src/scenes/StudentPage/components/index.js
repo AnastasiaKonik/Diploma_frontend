@@ -1,2 +1,3 @@
 export * from "./Dropzone"
-export * from "./HandleFiles"
+export * from "./HandleMaterialFiles"
+export * from "./HandleTaskFiles"

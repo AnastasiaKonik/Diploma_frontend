@@ -1,6 +1,6 @@
 import React from "react";
 
-import {Box, Container, Title} from '@mantine/core';
+import {Box, Container, SimpleGrid, Title} from '@mantine/core';
 
 import {StudentInfo} from "./components/StudentInfo/index.js";
 import {TimetableSt} from "./components/Timetable/index.js"
@@ -9,6 +9,8 @@ import {Homework} from "./components/Homework/index.js"
 import classes from "./PersonalAreaSt.module.css";
 
 export function PersonalAreaSt() {
+
+    const cards = Homework()
 
     return (
         <Container fluid maw={1400} className={classes.main}>
@@ -19,7 +21,7 @@ export function PersonalAreaSt() {
                 <Title order={2} align="center" mb="lg" className={classes.text}>Расписание занятий</Title>
                 <TimetableSt/>
                 <Title order={2} align="center" mb="lg" className={classes.text}>Выданные задания</Title>
-                <Homework/>
+                <SimpleGrid cols={{ md: 3, xs: 2, xl: 4 }}>{cards}</SimpleGrid>
             </Box>
 
         </Container>
