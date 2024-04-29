@@ -11,6 +11,13 @@
     background-color: light-dark(var(--mantine-color-cyan-7), var(--mantine-color-blue-7));
 }
 
+.dis_btn {
+    color: var(--mantine-color-gray-1);
+    background-color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-cyan-7));
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 
 .iconArchive {
     color: light-dark(var(--mantine-color-yellow-9), var(--mantine-color-yellow-7));

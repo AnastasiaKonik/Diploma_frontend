@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 import {ActionIcon, Button, Group, List, Text, TextInput} from '@mantine/core';
 
@@ -7,30 +7,67 @@ import {IconArchive, IconArchiveOff} from "@tabler/icons-react";
 
 import classes from "./StudentsList.module.css";
 
-const initialStudents = [
-    {
-        student: 'Коник Анастасия Александровна',
-        archived: false
-    },
-    {
-        student: 'Иван Иванов Иванович',
-        archived: false
-    }
-];
 
 export function StudentsList() {
-    const [students, setStudents] = useState(initialStudents);
     const [newStudentName, setNewStudentName] = useState('');
+    const tutor = localStorage.getItem("login")
+    const [students, setStudents] = useState([])
+    const [errorMessage, setErrorMessage] = useState("");
 
-    const handleAddStudent = () => {
-        if (newStudentName.trim() !== '') {
-            const newStudent = {student: newStudentName, archived: false}
-            setStudents([
-                ...students,
-                newStudent,
-            ]);
-            setNewStudentName('');
-            initialStudents.push(newStudent);
+    useEffect(() => {
+        fetch(`http://localhost:3030/tutors_students?tutor=${tutor}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then(response => response.json())
+            .then(json => {
+                setStudents(json.map(x => {
+                    return x.student_info
+                }))
+            })
+            .catch((error) => console.log("error", error))
+    }, [])
+
+
+    const handleAddStudent = async () => {
+        if (/^[а-яА-Я]+\s[а-яА-Я]+\s[а-яА-Я]+$/.test(newStudentName)) {
+            await fetch(`http://localhost:3030/tutors_students`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    student_info: {
+                        full_name: newStudentName,
+                        archived: false
+                    },
+                    tutor: localStorage.getItem("login")
+                }),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        response
+                            .json()
+                            .then(json => {
+                                setErrorMessage(json.message)
+                            })
+                            .catch(error => error)
+                    }
+                    return response
+                })
+                .then(response => response.json())
+                .then(json => {
+                    setNewStudentName('')
+                    setStudents([...students, json.student_info])
+                })
+                .catch((error) => {
+                    setErrorMessage("Что-то пошло не так")
+                    console.log(error)
+                })
+        } else {
+            setErrorMessage("ФИО введено неверно")
         }
     };
 
@@ -52,6 +89,8 @@ export function StudentsList() {
         setStudents(updatedStudents);
     };
 
+    const [isButtonDisabled, setButtonDisabled] = useState(true);
+
     return (
         <div>
             <List size="md" spacing="xs" type="ordered">
@@ -62,11 +101,11 @@ export function StudentsList() {
                             <Text fw={500} className={classes.text}
                                   style={{color: student.archived ? 'gray' : 'inherit'}}>
                                 {student.archived ? (
-                                        student.student
+                                        student.full_name
                                     )
                                     : (
                                         <Link to={"/student_page"} className={classes.link}>
-                                            {student.student}
+                                            {student.full_name}
                                         </Link>
                                     )}
                             </Text>
@@ -99,13 +138,20 @@ export function StudentsList() {
             </List>
 
             <TextInput
+                error={errorMessage}
                 mt="md"
                 maw={300}
                 value={newStudentName}
-                onChange={(event) => setNewStudentName(event.target.value)}
+                onChange={(event) => {
+                    setButtonDisabled(false)
+                    setNewStudentName(event.target.value)
+                }}
                 placeholder="Введите ФИО ученика"
             />
-            <Button onClick={handleAddStudent} className={classes.add_btn} mt="sm">Добавить ученика</Button>
+            <Button aria-disabled='true'
+                    disabled={isButtonDisabled}
+                    className={isButtonDisabled ? classes.dis_btn : classes.add_btn}
+                    onClick={handleAddStudent} mt="sm">Добавить ученика</Button>
         </div>
     );
 }
