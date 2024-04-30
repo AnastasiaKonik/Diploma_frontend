@@ -5,11 +5,11 @@ import {ActionIcon, Box, Button, Container, Group, Paper, Stack, Text, TextInput
 
 import {HandleMaterialFiles} from "./components";
 
-import {IconCheck, IconEdit, IconPhone, IconSchool, IconUser} from "@tabler/icons-react";
+import {IconCheck, IconEdit} from "@tabler/icons-react";
 
 import authProvider from "../../authProvider.jsx";
 import classes from "./StudentPage.module.css";
-import {HandleTaskFiles} from "./components/index.js";
+import {HandleTaskFiles, StudentData} from "./components/index.js";
 
 export function StudentPage() {
     let navigate = useNavigate();
@@ -27,7 +27,10 @@ export function StudentPage() {
             .then((tutorData) => {
                 setUserId(tutorData.id);
 
-                fetch(`http://localhost:3030/lessons/?tutor_id=${tutorData.id}&student_id=${1}`, {
+                const student = localStorage.getItem('student')
+
+                //TODO get lesson by: tutorId, student, earliest lesson date
+                fetch(`http://localhost:3030/lessons/?tutor_id=${tutorData.id}&student_id=${student}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -72,14 +75,26 @@ export function StudentPage() {
     const [isThemeEditing, setIsThemeEditing] = useState(false);
     const handleThemeSubmit = () => {
         setIsThemeEditing(false);
-        fetch(`http://localhost:3030/lessons/${userId}`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({theme: theme}),
-        })
-            .then((response) => response.json())
+        fetch(`http://localhost:3030/lessons/?tutor_id=${userId}&student_id=${localStorage.getItem('student')}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            .then(response => response.json())
+            .then(json => {
+                fetch(`http://localhost:3030/lessons/${json[0].id}`,
+                    {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({theme: theme}),
+                    })
+                    .then(response => response.json())
+                    .catch((error) => console.log("error", error));
+            })
             .catch((error) => console.log("error", error));
     };
 
@@ -88,13 +103,13 @@ export function StudentPage() {
 
     const handleSendText = async () => {
         // rewrite with .then
-        // const tutorLogin = localStorage.getItem("login")
         try {
-            // Find assignee by tutorLogin and student name
-            const response = await fetch('http://localhost:3030/tasks', {
+            const response = await fetch('http://localhost:3030/tasks/', {
                 method: 'POST',
-                body: JSON.stringify({"text": task, "author": localStorage.getItem("login"),
-                    "assignee_id": userId}),
+                body: JSON.stringify({
+                    "text": task, "author": localStorage.getItem("login"),
+                    "assignee_id": localStorage.getItem("student")
+                }),
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -123,30 +138,7 @@ export function StudentPage() {
                         <Box px="md" mx="auto" pt="xs" mb="md">
                             <Title order={1} mb="lg" align="center" className={classes.text}>Страница ученика</Title>
 
-                            <Title order={2} mb="xs" className={classes.title}>Информация об ученике</Title>
-                            <div>
-                                <Group wrap="nowrap">
-                                    <IconUser stroke={1.5} size="1rem" className={classes.icon}/>
-                                    <Text fz="xl" className={classes.text}>
-                                        Коник Анастасия Александровна
-                                        {/*Get student info dynamically */}
-                                    </Text>
-                                </Group>
-                                <Group wrap="nowrap">
-                                    <IconSchool stroke={1.5} size="1rem" className={classes.icon}/>
-                                    <Text fz="xl" className={classes.text}>
-                                        10 класс
-                                        {/*Get student info dynamically */}
-                                    </Text>
-                                </Group>
-                                <Group wrap="nowrap">
-                                    <IconPhone stroke={1.5} size="1rem" className={classes.icon}/>
-                                    <Text fz="xl" className={classes.text}>
-                                        +7 (924) 432-38-48
-                                        {/*Get student info dynamically */}
-                                    </Text>
-                                </Group>
-                            </div>
+                            <StudentData/>
 
                             <Title order={2} mb="sm" mt="lg" className={classes.title}>Материалы для занятий</Title>
                             <Group wrap="nowrap">

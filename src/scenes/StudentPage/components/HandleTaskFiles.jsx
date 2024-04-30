@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 
 import {Box, Button, FileButton, Group, Image, Stack, Text} from "@mantine/core";
 import {MIME_TYPES} from "@mantine/dropzone";
 
 import {Dropzone} from "./Dropzone.jsx";
-import authProvider from "../../../authProvider.jsx";
 
 
 export function HandleTaskFiles() {
@@ -25,15 +24,6 @@ export function HandleTaskFiles() {
         });
     };
 
-    const [userId, setUserId] = useState(null)
-
-    useEffect(() => {
-        authProvider.getTutorInfo()
-            .then((tutorData) => {
-                setUserId(tutorData.id);
-            })
-    }, []);
-
     const [taskId, setTaskId] = useState(null)
     const handleSaveFiles = async () => {
         try {
@@ -41,9 +31,8 @@ export function HandleTaskFiles() {
             form.values.files.forEach((file, index) => {
                 formData.append(`file${index}`, file);
             });
-            formData.append('author_id', userId);
-            // Find assignee same as in SendText
-            formData.append('assignee_id', userId);
+            formData.append('author', localStorage.getItem("login"));
+            formData.append('assignee_id', localStorage.getItem("student"));
 
 
             const response = await fetch('http://localhost:3030/tasks', {

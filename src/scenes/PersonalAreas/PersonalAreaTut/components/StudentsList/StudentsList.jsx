@@ -41,7 +41,8 @@ export function StudentsList() {
                 body: JSON.stringify({
                     student_info: {
                         full_name: newStudentName,
-                        archived: false
+                        archived: false,
+                        student_id: "10"
                     },
                     tutor: localStorage.getItem("login")
                 }),
@@ -104,7 +105,11 @@ export function StudentsList() {
                                         student.full_name
                                     )
                                     : (
-                                        <Link to={"/student_page"} className={classes.link}>
+                                        <Link to={`/student_page`} className={classes.link}
+                                              onClick={() => {
+                                                  localStorage.removeItem('student')
+                                                  localStorage.setItem('student', student.student_id)
+                                              }}>
                                             {student.full_name}
                                         </Link>
                                     )}
