@@ -10,6 +10,7 @@ import classes from "./PersonalAreaTut.module.css";
 
 export function PersonalAreaTut() {
 
+
     return (
         <Container fluid maw={1400} className={classes.main}>
 
@@ -26,7 +27,7 @@ export function PersonalAreaTut() {
                     После нажмите клавишу Enter"
                     color="indigo"
                 >
-                    <Badge mb="xs" className={classes.badge}  variant="filled">Инфо</Badge>
+                    <Badge mb="xs" className={classes.badge} variant="filled">Инфо</Badge>
                 </Tooltip>
                 <TimetableTut/>
                 <Title order={2} align="center" mb="lg" className={classes.text}>Ваши ученики</Title>

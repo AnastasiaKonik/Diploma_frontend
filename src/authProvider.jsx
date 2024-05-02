@@ -1,4 +1,4 @@
-import {ApiPath} from "./main.jsx";
+import {ApiPath, JSONServerPath} from "./main.jsx";
 import {StatusCodes} from "http-status-codes";
 
 const authProvider = {
@@ -33,11 +33,23 @@ const authProvider = {
     logout: () => {
         localStorage.removeItem('access-token')
         localStorage.removeItem('refresh-token')
-        localStorage.removeItem("phone")
+
+        localStorage.removeItem('student_name')
+        localStorage.removeItem('student_surname')
+        localStorage.removeItem("student_id")
+
         localStorage.removeItem("first_name")
         localStorage.removeItem("last_name")
         localStorage.removeItem("patronymic")
+
+        localStorage.removeItem("id")
         localStorage.removeItem("role")
+        localStorage.removeItem("login")
+
+        localStorage.removeItem("phone")
+        localStorage.removeItem("grade")
+        localStorage.removeItem("subject")
+
         return Promise.resolve('/')
     },
     checkAuth: () => {
@@ -118,6 +130,35 @@ const authProvider = {
                 })
             })
     },
+    postStudentInfoJsonServer: (grade, id) => {
+        return fetch(`${JSONServerPath}/students_info`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "first_name": localStorage.getItem('first_name'),
+                "last_name": localStorage.getItem('last_name'),
+                "patronymic": localStorage.getItem('patronymic'),
+                //"grade": localStorage.getItem('grade'),
+                // "id": localStorage.getItem('id'),
+                "phone": localStorage.getItem('phone'),
+                "id": id,
+                "grade": grade
+            }),
+        }).then(resp => {
+            if (!resp.ok) {
+                return Promise.reject("Ошибка сервера")
+            }
+            return resp.json()
+        }, () => Promise.reject("Неизвестная ошибка"))
+            .then(() => {
+                return Promise.resolve()
+            })
+            .catch((reason) => {
+                console.log(reason)
+            })
+    },
     patchStudentGrade: (grade) => {
         return fetch(`${ApiPath}/users/student_info`, {
             method: "PATCH",
@@ -134,6 +175,26 @@ const authProvider = {
         }, () => Promise.reject("Неизвестная ошибка"))
             .then(() => {
                 return Promise.resolve()
+            })
+            .then(() => {
+                fetch(`${JSONServerPath}/students_info/${localStorage.getItem('id')}`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({"grade": grade}),
+                }).then(resp => {
+                    if (!resp.ok) {
+                        return Promise.reject("Ошибка сервера")
+                    }
+                    return resp.json()
+                }, () => Promise.reject("Неизвестная ошибка"))
+                    .then(() => {
+                        return Promise.resolve()
+                    })
+                    .catch((reason) => {
+                        console.log(reason)
+                    })
             })
             .catch((reason) => {
                 console.log(reason)
@@ -176,6 +237,28 @@ const authProvider = {
         }, () => Promise.reject("Неизвестная ошибка"))
             .then(() => {
                 return Promise.resolve()
+            })
+            .then(() => {
+                if (localStorage.getItem("role") === "ST") {
+                    fetch(`${JSONServerPath}/students_info/${localStorage.getItem('id')}`, {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({"phone": phone}),
+                    }).then(resp => {
+                        if (!resp.ok) {
+                            return Promise.reject("Ошибка сервера")
+                        }
+                        return resp.json()
+                    }, () => Promise.reject("Неизвестная ошибка"))
+                        .then(() => {
+                            return Promise.resolve()
+                        })
+                        .catch((reason) => {
+                            console.log(reason)
+                        })
+                }
             })
             .catch((reason) => {
                 console.log(reason)

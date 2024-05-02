@@ -2,55 +2,52 @@ import {Table, Text, Anchor} from '@mantine/core';
 
 import classes from "./Timetable.module.css";
 import {useEffect, useState} from "react";
-import authProvider from "../../../../../authProvider.jsx";
 import moment from "moment";
 
 
+//TODO: render before page refresh
 export function TimetableSt() {
 
     const [timetable, setTimetable] = useState([
         {
-            "id": null,
-            "date": null,
-            "time": null,
-            "subject": null,
-            "theme": null,
-            "tutor": null,
-            "student_id": null,
-            "contacts": null
+            "id": '1',
+            "date": '',
+            "time": '',
+            "subject": '',
+            "theme": '',
+            "tutor": '',
+            "student_name": '',
+            "student_surname": '',
+            "contacts": ''
         }
     ])
 
     useEffect(() => {
-        authProvider.getStudentInfo()
-            .then(studentData => {
-                fetch(`http://localhost:3030/timetable/?student_id=${studentData.id}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                })
-                    .then(response => response.json())
-                    .then(json => {
-                        setTimetable(json.map(x => {
-                                return {
-                                    "id": x.id,
-                                    "date": x.date,
-                                    "time": x.time,
-                                    "subject": x.subject,
-                                    "theme": x.theme,
-                                    "tutor": x.tutor,
-                                    "student_id": x.student_id,
-                                    "contacts": x.contacts
-                                }
+        fetch(`http://localhost:3030/lessons/?student_id=${localStorage.getItem('id')}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then(response => response.json())
+            .then(json => {
+                if (json.length) {
+                    setTimetable(json.map(x => {
+                            return {
+                                "id": x.id,
+                                "date": x.date,
+                                "time": x.time,
+                                "subject": x.subject,
+                                "theme": x.theme,
+                                "tutor": x.tutor,
+                                "contacts": x.contacts
                             }
-                        ))
-                    })
-                    .catch((error) => console.log("Error fetching timetable:", error));
+                        }
+                    ))
+                }
+                else {setTimetable([...timetable])}
             })
-            .catch(error => {
-                console.error(error);
-            });
+            .catch((error) => console.log("Error fetching timetable:", error));
     }, []);
 
     const weekday = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
@@ -58,17 +55,29 @@ export function TimetableSt() {
     const rows = timetable.map((item) => (
         <Table.Tr key={item.id}>
             <Table.Td>
-                <Text fz="sm" fw={500}>
-                    {weekday[new Date(item.date).getDay()]} {moment(item.date, 'YYYY-MM-DD')
-                    .format('DD.MM.YYYY')}
-                </Text>
+                {item.date ? (
+                    <Text fz="sm" fw={500}>
+                        {weekday[new Date(item.date).getDay()]} {moment(item.date, 'YYYY-MM-DD')
+                        .format('DD.MM.YYYY')}
+                    </Text>
+                ) : (
+                    <Text fz="sm" fw={500}>
+                        {item.date}
+                    </Text>
+                )}
             </Table.Td>
 
             <Table.Td>
-                <Text fz="sm" fw={500}>
-                    {moment(item.time, 'HH:mm:ss.SS')
-                        .format('HH:mm')}
-                </Text>
+                {item.time ? (
+                    <Text fz="sm" fw={500}>
+                        {moment(item.time, 'HH:mm:ss.SS')
+                            .format('HH:mm')}
+                    </Text>
+                ) : (
+                    <Text fz="sm" fw={500}>
+                        {item.time}
+                    </Text>
+                )}
             </Table.Td>
 
             <Table.Td>

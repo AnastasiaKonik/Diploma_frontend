@@ -15,6 +15,7 @@ import {StudentPage} from "./scenes/StudentPage/index.js";
 import {PersonalAreas} from "./scenes/PersonalAreas/index.js";
 
 export const ApiPath = "http://localhost:8000/api"
+export const JSONServerPath = "http://localhost:3030"
 
 const router = createBrowserRouter([
     {
@@ -49,7 +50,9 @@ const router = createBrowserRouter([
     },
 ]);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+
+const root = ReactDOM.createRoot(document.getElementById('root'))
+root.render(
   <React.StrictMode>
       <ColorSchemeScript defaultColorScheme="auto" />
       <MantineProvider defaultColorScheme="auto" theme={theme}>
