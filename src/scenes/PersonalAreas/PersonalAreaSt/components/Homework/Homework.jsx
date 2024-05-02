@@ -9,10 +9,10 @@ export const Homework = () => {
 
     const [tasks, setTask] = useState([
             {
-                text: null,
+                text: "",
                 file: null,
-                author: null,
-                id: null,
+                author: "",
+                id: "",
             },
         ]
     )
@@ -30,8 +30,7 @@ export const Homework = () => {
                     .then(json => {
                         setTask(json.map(x => {
                                 return {
-                                    // taskTheme: json.theme,
-                                    text: x["text"] ? x.text : null,
+                                    text: x["text"] ? x.text : "",
                                     file: x["file0"] ? x.file0.path : null,
                                     author: x.author,
                                     id: x.id

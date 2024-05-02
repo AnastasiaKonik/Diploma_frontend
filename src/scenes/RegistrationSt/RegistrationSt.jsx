@@ -73,6 +73,16 @@ export const RegistrationSt = () => {
             .catch((reason) => {
                 console.log(reason)
             })
+
+        const postJsonServer = async () => {
+            await authProvider.postStudentInfoJsonServer()
+                .then()
+                .catch((reason) => {
+                    console.log(reason)
+                })
+        }
+        setTimeout(postJsonServer, 1000)
+
     };
 
     return (
