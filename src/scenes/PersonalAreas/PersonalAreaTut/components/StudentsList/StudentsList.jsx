@@ -32,36 +32,70 @@ export function StudentsList() {
 
 
     const handleAddStudent = async () => {
-        if (/^[а-яА-Я]+\s[а-яА-Я]+\s[а-яА-Я]+$/.test(newStudentName)) {
-            await fetch(`http://localhost:3030/tutors_students`, {
-                method: "POST",
+        if (/^[а-яА-Я]+\s[а-яА-Я]+$/.test(newStudentName) || /^[а-яА-Я]+\s[а-яА-Я]+\s[а-яА-Я]+$/.test(newStudentName)) {
+            const last_name = newStudentName.split(' ')[0];
+            const first_name = newStudentName.split(' ')[1];
+            const patronymic = newStudentName.split(' ')[2] ? newStudentName.split(' ')[2] : "";
+
+            await fetch(`http://localhost:3030/students_info?first_name=${first_name}&last_name=${last_name}`, {
+                method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    student_info: {
-                        full_name: newStudentName,
-                        archived: false,
-                        student_id: "10"
-                    },
-                    tutor: localStorage.getItem("login")
-                }),
             })
-                .then(response => {
+                 .then(response => {
                     if (!response.ok) {
-                        response
-                            .json()
+                        response.json()
                             .then(json => {
                                 setErrorMessage(json.message)
                             })
-                            .catch(error => error)
+                            .catch(error => {
+                                console.log(error)
+                            })
                     }
-                    return response
+                    return response.json()
                 })
-                .then(response => response.json())
-                .then(json => {
-                    setNewStudentName('')
-                    setStudents([...students, json.student_info])
+                .then((json) => {
+                    if (json.length === 0) {
+                        setErrorMessage("Ученик не зарегистрирован на платформе")
+                    } else {
+                        setErrorMessage('')
+                        fetch(`http://localhost:3030/tutors_students`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                student_info: {
+                                    first_name: first_name,
+                                    last_name: last_name,
+                                    patronymic: patronymic,
+                                    archived: false,
+                                    student_id: json.id
+                                },
+                                tutor: localStorage.getItem("login")
+                            }),
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    response.json()
+                                        .then(json => {
+                                            setErrorMessage(json.message)
+                                        })
+                                        .catch(error => error)
+                                }
+                                return response
+                            })
+                            .then(response => response.json())
+                            .then(json => {
+                                setNewStudentName('')
+                                setStudents([...students, json.student_info])
+                            })
+                            .catch((error) => {
+                                setErrorMessage("Что-то пошло не так")
+                                console.log(error)
+                            })
+                    }
                 })
                 .catch((error) => {
                     setErrorMessage("Что-то пошло не так")
@@ -102,15 +136,18 @@ export function StudentsList() {
                             <Text fw={500} className={classes.text}
                                   style={{color: student.archived ? 'gray' : 'inherit'}}>
                                 {student.archived ? (
-                                        student.full_name
+                                        <>
+                                            {student.last_name} {student.first_name} {student.patronymic}
+                                        </>
                                     )
                                     : (
                                         <Link to={`/student_page`} className={classes.link}
                                               onClick={() => {
-                                                  localStorage.removeItem('student')
-                                                  localStorage.setItem('student', student.student_id)
-                                              }}>
-                                            {student.full_name}
+                                                  localStorage.setItem('student_name', student.first_name)
+                                                  localStorage.setItem('student_surname', student.last_name)
+                                              }}
+                                        >
+                                            {student.last_name} {student.first_name} {student.patronymic}
                                         </Link>
                                     )}
                             </Text>
@@ -148,6 +185,7 @@ export function StudentsList() {
                 maw={300}
                 value={newStudentName}
                 onChange={(event) => {
+                    setErrorMessage('')
                     setButtonDisabled(false)
                     setNewStudentName(event.target.value)
                 }}

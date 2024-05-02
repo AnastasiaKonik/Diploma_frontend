@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 
 import {ActionIcon, Box, Button, Container, Group, Paper, Stack, Text, TextInput, Title} from '@mantine/core';
 
-import {HandleMaterialFiles} from "./components";
+import {GetMaterials, HandleMaterialFiles} from "./components";
 
 import {IconCheck, IconEdit} from "@tabler/icons-react";
 
@@ -19,38 +19,6 @@ export function StudentPage() {
     };
 
     const [isTutor, setIsTutor] = useState(false);
-    const [userId, setUserId] = useState(null)
-    const [theme, setTheme] = useState("");
-
-    useEffect(() => {
-        authProvider.getTutorInfo()
-            .then((tutorData) => {
-                setUserId(tutorData.id);
-
-                const student = localStorage.getItem('student')
-
-                //TODO get lesson by: tutorId, student, earliest lesson date
-                fetch(`http://localhost:3030/lessons/?tutor_id=${tutorData.id}&student_id=${student}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        const theme = data[0].theme;
-                        if (theme) {
-                            setTheme(theme);
-                        } else {
-                            console.log("Lesson not found for tutor ID:", tutorData.id);
-                        }
-                    })
-                    .catch((error) => console.log("Error fetching lesson:", error));
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }, []);
 
     useEffect(() => {
         authProvider.checkAuth()
@@ -72,43 +40,19 @@ export function StudentPage() {
             });
     }, []);
 
-    const [isThemeEditing, setIsThemeEditing] = useState(false);
-    const handleThemeSubmit = () => {
-        setIsThemeEditing(false);
-        fetch(`http://localhost:3030/lessons/?tutor_id=${userId}&student_id=${localStorage.getItem('student')}`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-            .then(response => response.json())
-            .then(json => {
-                fetch(`http://localhost:3030/lessons/${json[0].id}`,
-                    {
-                        method: "PATCH",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({theme: theme}),
-                    })
-                    .then(response => response.json())
-                    .catch((error) => console.log("error", error));
-            })
-            .catch((error) => console.log("error", error));
-    };
 
     const [isTaskEditing, setIsTaskEditing] = useState(false);
     const [task, setTask] = useState("");
 
     const handleSendText = async () => {
-        // rewrite with .then
         try {
             const response = await fetch('http://localhost:3030/tasks/', {
                 method: 'POST',
                 body: JSON.stringify({
-                    "text": task, "author": localStorage.getItem("login"),
-                    "assignee_id": localStorage.getItem("student")
+                    "text": task,
+                    "author":
+                        `${localStorage.getItem("first_name")} ${localStorage.getItem("last_name")} ${localStorage.getItem("patronymic")}`,
+                    "assignee_id": localStorage.getItem("student_id")
                 }),
                 headers: {
                     "Content-Type": "application/json",
@@ -117,7 +61,6 @@ export function StudentPage() {
 
             if (response.ok) {
                 const data = await response.json();
-                // POST to /tasks
                 setTask("")
                 return data.files;
             } else {
@@ -137,46 +80,15 @@ export function StudentPage() {
                     <>
                         <Box px="md" mx="auto" pt="xs" mb="md">
                             <Title order={1} mb="lg" align="center" className={classes.text}>Страница ученика</Title>
-
                             <StudentData/>
 
                             <Title order={2} mb="sm" mt="lg" className={classes.title}>Материалы для занятий</Title>
                             <Group wrap="nowrap">
                                 <Stack>
-                                    <Title order={3} className={classes.text}>Тема следующего занятия:</Title>
-                                    <Group wrap="nowrap" gap={10}>
-                                        {isThemeEditing ? (
-                                            <>
-                                                <TextInput
-                                                    value={theme}
-                                                    onChange={(event) => {
-                                                        setTheme(event.target.value)
-                                                    }}
-                                                />
-                                                <ActionIcon component="button" variant="subtle" color="green"
-                                                            type="submit" onClick={handleThemeSubmit}>
-                                                    <IconCheck size="1rem" stroke={1.5}/>
-                                                </ActionIcon>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Paper withBorder p="xs" shadow="md" miw={250}>
-                                                    <Text
-                                                        fz="md"
-                                                        className={classes.text}>{theme}
-                                                    </Text>
-                                                </Paper>
-                                                <ActionIcon variant="subtle" color="gray"
-                                                            onClick={() => {
-                                                                setIsThemeEditing(true)
-                                                            }}>
-                                                    <IconEdit size="1rem" stroke={1.5}/>
-                                                </ActionIcon>
-                                            </>
-                                        )}
-                                    </Group>
                                     <Title order={3} className={classes.text}>Прикрепить материалы:</Title>
                                     <HandleMaterialFiles/>
+                                    <Title order={4} className={classes.text}>Ваши материалы:</Title>
+                                   <GetMaterials/>
                                 </Stack>
                             </Group>
 

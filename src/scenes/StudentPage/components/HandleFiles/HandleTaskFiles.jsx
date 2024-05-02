@@ -24,15 +24,16 @@ export function HandleTaskFiles() {
         });
     };
 
-    const [taskId, setTaskId] = useState(null)
     const handleSaveFiles = async () => {
         try {
             const formData = new FormData();
             form.values.files.forEach((file, index) => {
                 formData.append(`file${index}`, file);
             });
-            formData.append('author', localStorage.getItem("login"));
-            formData.append('assignee_id', localStorage.getItem("student"));
+            formData.append('author',
+            `${localStorage.getItem("first_name")} ${localStorage.getItem("last_name")} ${localStorage.getItem("patronymic")}`,
+        );
+            formData.append('assignee_id', localStorage.getItem("student_id"));
 
 
             const response = await fetch('http://localhost:3030/tasks', {
@@ -45,7 +46,6 @@ export function HandleTaskFiles() {
 
             if (response.ok) {
                 const data = await response.json();
-                setTaskId(data.id)
                 setForm({
                     ...form,
                     values: {
@@ -63,26 +63,12 @@ export function HandleTaskFiles() {
     };
 
     const handleRemoveFiles = () => {
-        fetch(`http://localhost:3030/materials/${taskId}`, {
-            method: 'DELETE',
+        setForm({
+            ...form,
+            values: {
+                files: []
+            }
         })
-            .then(resp => {
-                if (!resp.ok) {
-                    return Promise.reject('Ошибка удаления файлов')
-                }
-                setForm({
-                    ...form,
-                    values: {
-                        files: []
-                    }
-                })
-            })
-            .then(() => {
-                return Promise.resolve()
-            })
-            .catch((reason) => {
-                console.log(reason)
-            })
     };
 
     return (

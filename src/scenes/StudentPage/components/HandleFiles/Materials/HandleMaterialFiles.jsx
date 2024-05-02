@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 
 import {Box, Button, FileButton, Group, Image, Stack, Text} from "@mantine/core";
 import {MIME_TYPES} from "@mantine/dropzone";
 
-import {Dropzone} from "./Dropzone.jsx";
-import authProvider from "../../../authProvider.jsx";
+import {Dropzone} from "../Dropzone.jsx";
 
 
 export function HandleMaterialFiles() {
@@ -25,24 +24,14 @@ export function HandleMaterialFiles() {
         });
     };
 
-    const [userId, setUserId] = useState(null)
-
-    useEffect(() => {
-        authProvider.getTutorInfo()
-            .then((tutorData) => {
-                setUserId(tutorData.id);
-            })
-    }, []);
-
-
-    const [taskId, setTaskId] = useState(null)
     const handleSaveFiles = async () => {
         try {
             const formData = new FormData();
             form.values.files.forEach((file, index) => {
                 formData.append(`file${index}`, file);
             });
-            formData.append('author_id', userId);
+            formData.append('author_id', localStorage.getItem('id'));
+            formData.append('student', localStorage.getItem('student_id'));
 
 
             const response = await fetch('http://localhost:3030/materials', {
@@ -54,9 +43,13 @@ export function HandleMaterialFiles() {
             });
 
             if (response.ok) {
-                const data = await response.json();
-                setTaskId(data.id)
-                return data.files;
+                setForm({
+                    ...form,
+                    values: {
+                        files: []
+                    }
+                })
+                return await response.json()
             } else {
                 console.log('Ошибка сохранения файлов');
             }
@@ -66,27 +59,14 @@ export function HandleMaterialFiles() {
         }
     };
 
+    //JSON-server doesn't supply deleting all items
     const handleRemoveFiles = () => {
-        fetch(`http://localhost:3030/materials/${taskId}`, {
-            method: 'DELETE',
+        setForm({
+            ...form,
+            values: {
+                files: []
+            }
         })
-            .then(resp => {
-                if (!resp.ok) {
-                    return Promise.reject('Ошибка удаления файлов')
-                }
-                setForm({
-                    ...form,
-                    values: {
-                        files: []
-                    }
-                })
-            })
-            .then(() => {
-                return Promise.resolve()
-            })
-            .catch((reason) => {
-                console.log(reason)
-            })
     };
 
     return (
