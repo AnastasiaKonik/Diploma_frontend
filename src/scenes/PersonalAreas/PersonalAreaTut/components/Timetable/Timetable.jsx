@@ -7,7 +7,6 @@ import {IconPlus, IconTrash} from "@tabler/icons-react";
 import classes from "./Timetable.module.css";
 import moment from "moment";
 
-//TODO: render before page refresh
 export function TimetableTut() {
     const [data, setData] = useState([
         {
@@ -18,9 +17,12 @@ export function TimetableTut() {
             student: ''
         },
     ])
+    const [editingCell, setEditingCell] = useState(null);
 
-    useEffect(() => {
-        fetch(`http://localhost:3030/lessons/?tutor_id=${localStorage.getItem('id')}`, {
+    const tutorId = localStorage.getItem('id')
+
+    const getTimetable = () => {
+        fetch(`http://localhost:3030/lessons/?tutor_id=${tutorId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -38,14 +40,18 @@ export function TimetableTut() {
                                 "student": `${x.student_surname} ${x.student_name} ${x.student_patronymic}`,
                             }
                         }))
+                    } else {
+                        setData([...data])
                     }
-                    else {setData([...data])}
                 }
             )
-            .catch(error => console.error('Error fetching data:', error));
-    }, [localStorage.getItem('lesson_id')]);
+            .catch(error => console.error('Ошибка получения занятия', error));
+    }
 
-    const [editingCell, setEditingCell] = useState(null);
+    useEffect(() => {
+        setTimeout(getTimetable, 100)
+    }, [localStorage.getItem("lesson_id")]);
+
 
     const handleEdit = (id, field, value) => {
         const updatedData = data.map((row) =>
@@ -57,7 +63,7 @@ export function TimetableTut() {
     const handleKeyDown = async (event, id, value) => {
         if (event.key === 'Enter') {
 
-            await fetch(`http://localhost:3030/lessons?tutor_id=${localStorage.getItem('id')}`, {
+            await fetch(`http://localhost:3030/lessons?tutor_id=${tutorId}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -83,7 +89,7 @@ export function TimetableTut() {
                                 "student_patronymic": "",
                                 "tutor":
                                     `${localStorage.getItem("last_name")} ${localStorage.getItem("first_name")} ${localStorage.getItem("patronymic")}`,
-                                "tutor_id": localStorage.getItem("id"),
+                                "tutor_id": tutorId,
                                 "subject": localStorage.getItem("subject"),
                                 "contacts": localStorage.getItem("phone")
                             }),
@@ -94,19 +100,23 @@ export function TimetableTut() {
                             })
                         localStorage.setItem("lesson_id", id)
                     } else {
-                        if (/^[а-яА-Я]+\s[а-яА-Я]+$/.test(value) || /^[а-яА-Я]+\s[а-яА-Я]+\s[а-яА-Я]+$/.test(value) || !value) {
+                        if (/^[а-яА-Я]+\s[а-яА-Я]+$/.test(value)
+                            || /^[а-яА-Я]+\s[а-яА-Я]+\s[а-яА-Я]+$/.test(value)
+                            || !value) {
                             const student_name = value?.split(' ')[1] ? value.split(' ')[1] : "";
                             const student_surname = value?.split(' ')[0] ? value.split(' ')[0] : "";
                             const student_patronymic = value?.split(' ')[2] ? value.split(' ')[2] : "";
+
                             setEditingCell(null);
 
                             if (student_name && student_surname) {
-                                fetch(`http://localhost:3030/students_info?first_name=${student_name}&last_name=${student_surname}`, {
-                                    method: "GET",
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                    },
-                                })
+                                fetch(`http://localhost:3030/students_info?first_name=${student_name}&last_name=${student_surname}`,
+                                    {
+                                        method: "GET",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                        },
+                                    })
                                     .then((response) => response.json())
                                     .then((data) => {
                                         localStorage.setItem("student_id", data[0].id)
@@ -129,7 +139,7 @@ export function TimetableTut() {
                                                 console.log(error)
                                             })
                                     })
-                                    .catch((error) => console.log("Error fetching studentId", error));
+                                    .catch((error) => console.log("Ошибка получения id", error));
                             } else {
                                 fetch(`http://localhost:3030/lessons/${localStorage.getItem("lesson_id")}`, {
                                     method: "PATCH",
@@ -178,7 +188,7 @@ export function TimetableTut() {
         const newId = data[0].id + 1;
         const newRow = {
             id: newId,
-            date: "",
+            date: '',
             time: '',
             theme: '',
             student: ''
@@ -201,7 +211,7 @@ export function TimetableTut() {
                 "student_patronymic": "",
                 "tutor":
                     `${localStorage.getItem("last_name")} ${localStorage.getItem("first_name")} ${localStorage.getItem("patronymic")}`,
-                "tutor_id": localStorage.getItem("id"),
+                "tutor_id": tutorId,
                 "subject": localStorage.getItem("subject"),
                 "contacts": localStorage.getItem("phone")
             }),
@@ -223,15 +233,15 @@ export function TimetableTut() {
                         type="date"
                         variant="filled"
                         value={row.date}
-                        onChange={(event) => {
-                            handleEdit(row.id, 'date', event.target.value)
-                        }}
+                        onChange={(event) => handleEdit(row.id, 'date', event.target.value)}
                         onKeyDown={(event) => handleKeyDown(event, row.id)}
                     />
                 ) : (
                     row.date ? (
                         <Text>
-                            {weekday[new Date(row.date).getDay()]} {moment(row.date, 'YYYY-MM-DD').format('DD.MM.YYYY')}
+                            {weekday[new Date(row.date).getDay()]}
+                            {" "}
+                            {moment(row.date, 'YYYY-MM-DD').format('DD.MM.YYYY')}
                         </Text>
                     ) : (
                         <Text>
@@ -285,14 +295,16 @@ export function TimetableTut() {
 
             <Table.Td>
                 <Group gap={0} justify="flex-end">
-                    <ActionIcon variant="subtle" color="red" onClick={() => handleDelete(row.id)}>
+                    <ActionIcon variant="subtle" className={classes.icon_trash}
+                                onClick={() => handleDelete(row.id)}>
                         <IconTrash size="1rem" stroke={1.5}/>
                     </ActionIcon>
                 </Group>
             </Table.Td>
 
             <Table.Td>
-                <ActionIcon variant="subtle" color="green" onClick={() => handleAddRow()}>
+                <ActionIcon variant="subtle" color="green"
+                            onClick={() => handleAddRow()}>
                     <IconPlus size="1rem" stroke={1.5}/>
                 </ActionIcon>
             </Table.Td>
@@ -305,7 +317,7 @@ export function TimetableTut() {
             <Table verticalSpacing="sm" horizontalSpacing="xl"
                    withTableBorder withColumnBorders
                    align="center" w="auto" mb="lg" highlightOnHover>
-                <Table.Thead className={classes.tableHeader}>
+                <Table.Thead className={classes.table_header}>
 
                     <Table.Tr>
                         <Table.Th>День занятия</Table.Th>

@@ -1,29 +1,101 @@
 {
   "lessons": [
     {
-      "id": "1",
-      "date": "24.03.24",
-      "time": "16:30",
-      "theme": "Логарифмы",
-      "student_id": 1,
-      "tutor_id": 1
-    },
-    {
-      "id": "2",
-      "date": "12.04.24",
-      "time": "11:00",
-      "theme": "Планиметрия",
-      "student_id": 2,
-      "tutor_id": 1
-    },
-    {
-      "id": "3",
-      "date": "11.05.24",
-      "time": "15:15",
-      "theme": "Неправильные глаголы",
-      "student_id": 1,
-      "tutor_id": 2
+      "id": "1714757688899",
+      "date": "2024-05-17",
+      "time": "10:30",
+      "theme": "",
+      "student_id": "2",
+      "student_surname": "Коник",
+      "student_name": "Анастасия",
+      "student_patronymic": "",
+      "tutor": "Коник Ольга Юрьевна",
+      "tutor_id": "1",
+      "subject": "математика",
+      "contacts": "+7 (444) 444-44-25"
     }
   ],
-  "users": []
+  "materials": [
+    {
+      "id": "fd98",
+      "file0": {
+        "path": "prezentatsiia.pdf"
+      },
+      "author_id": "1",
+      "student_id": "11"
+    },
+    {
+      "id": "8a46",
+      "file0": {
+        "path": "требования вкр.pdf"
+      },
+      "author_id": "6",
+      "student_id": "2"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "c665",
+      "text": "дз",
+      "author": "Ольга Коник Юрьевна",
+      "student_id": "2"
+    },
+    {
+      "id": "ec39",
+      "text": "еще дз",
+      "author": "Ольга Коник Юрьевна",
+      "student_id": "11"
+    }
+  ],
+  "tutors_students": [
+    {
+      "id": "83b8",
+      "student_info": {
+        "first_name": "Анастасия",
+        "last_name": "Коник",
+        "patronymic": "Александровна",
+        "archived": false,
+        "student_id": "2"
+      },
+      "tutor": "tutor1"
+    },
+    {
+      "id": "f37b",
+      "student_info": {
+        "first_name": "Егор",
+        "last_name": "Назаров",
+        "patronymic": "",
+        "archived": false
+      },
+      "tutor": "tutor1"
+    },
+    {
+      "id": "1929",
+      "student_info": {
+        "first_name": "Анастасия",
+        "last_name": "Коник",
+        "patronymic": "",
+        "archived": false
+      },
+      "tutor": "tutor2"
+    }
+  ],
+  "students_info": [
+    {
+      "id": "2",
+      "first_name": "Анастасия",
+      "last_name": "Коник",
+      "patronymic": "Александровна",
+      "grade": "8",
+      "phone": "+7 (444) 444-44-33"
+    },
+    {
+      "id": "11",
+      "first_name": "Егор",
+      "last_name": "Назаров",
+      "patronymic": "",
+      "grade": "3",
+      "phone": "+7 (777) 777-77-78"
+    }
+  ]
 }

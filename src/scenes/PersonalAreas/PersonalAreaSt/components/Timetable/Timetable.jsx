@@ -4,10 +4,7 @@ import classes from "./Timetable.module.css";
 import {useEffect, useState} from "react";
 import moment from "moment";
 
-
-//TODO: render before page refresh
 export function TimetableSt() {
-
     const [timetable, setTimetable] = useState([
         {
             "id": '1',
@@ -22,7 +19,7 @@ export function TimetableSt() {
         }
     ])
 
-    useEffect(() => {
+    const getTimetable = () => {
         fetch(`http://localhost:3030/lessons/?student_id=${localStorage.getItem('id')}`, {
             method: "GET",
             headers: {
@@ -44,10 +41,15 @@ export function TimetableSt() {
                             }
                         }
                     ))
+                } else {
+                    setTimetable([...timetable])
                 }
-                else {setTimetable([...timetable])}
             })
-            .catch((error) => console.log("Error fetching timetable:", error));
+            .catch((error) => console.log("Ошибка получения расписания", error));
+    }
+
+    useEffect(() => {
+        setTimeout(getTimetable, 100)
     }, []);
 
     const weekday = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
@@ -70,8 +72,7 @@ export function TimetableSt() {
             <Table.Td>
                 {item.time ? (
                     <Text fz="sm" fw={500}>
-                        {moment(item.time, 'HH:mm:ss.SS')
-                            .format('HH:mm')}
+                        {moment(item.time, 'HH:mm:ss.SS').format('HH:mm')}
                     </Text>
                 ) : (
                     <Text fz="sm" fw={500}>
@@ -99,7 +100,8 @@ export function TimetableSt() {
             </Table.Td>
 
             <Table.Td>
-                <Anchor size="sm" fw={500} className={classes.phone} underline="hover" href={`tel:${item.contacts}`}>
+                <Anchor size="sm" fw={500} className={classes.phone} underline="hover"
+                        href={`tel:${item.contacts}`}>
                     {item.contacts}
                 </Anchor>
             </Table.Td>
@@ -108,8 +110,9 @@ export function TimetableSt() {
 
     return (
         <Table.ScrollContainer minWidth={800} type="native">
-            <Table verticalSpacing="sm" horizontalSpacing="xl" withTableBorder align="center" w="auto" mb="lg">
-                <Table.Thead className={classes.tableHeader}>
+            <Table verticalSpacing="sm" horizontalSpacing="xl" withTableBorder
+                   mt="md" align="center" w="auto" mb="lg">
+                <Table.Thead className={classes.table_header}>
 
                     <Table.Tr>
                         <Table.Th>День занятия</Table.Th>

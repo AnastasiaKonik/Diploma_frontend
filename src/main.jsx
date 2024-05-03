@@ -10,12 +10,9 @@ import { theme } from "./theme";
 
 import Root from "./Root";
 import {Home, RegistrationTut, RegistrationSt} from "./scenes";
-import {Login} from "./scenes/Login/index.js";
-import {StudentPage} from "./scenes/StudentPage/index.js";
-import {PersonalAreas} from "./scenes/PersonalAreas/index.js";
-
-export const ApiPath = "http://localhost:8000/api"
-export const JSONServerPath = "http://localhost:3030"
+import {Login} from "./scenes/index.js";
+import {StudentPage} from "./scenes/index.js";
+import {PersonalAreas} from "./scenes/index.js";
 
 const router = createBrowserRouter([
     {

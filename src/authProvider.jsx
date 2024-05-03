@@ -1,9 +1,8 @@
-import {ApiPath, JSONServerPath} from "./main.jsx";
 import {StatusCodes} from "http-status-codes";
 
 const authProvider = {
     login: ({username, password}) => {
-        return fetch(`${ApiPath}/token/`, {
+        return fetch(`http://localhost:8000/api/token/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -58,7 +57,7 @@ const authProvider = {
             : Promise.reject();
     },
     createUser: (values) => {
-        return fetch(`${ApiPath}/users`, {
+        return fetch(`http://localhost:8000/api/users`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -78,7 +77,7 @@ const authProvider = {
             })
     },
     postStudentInfo: (grade) => {
-        return fetch(`${ApiPath}/users/student_info`, {
+        return fetch(`http://localhost:8000/api/users/student_info`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -99,7 +98,7 @@ const authProvider = {
             })
     },
     getStudentInfo: () => {
-        return fetch(`${ApiPath}/users/student_info`, {
+        return fetch(`http://localhost:8000/api/users/student_info`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -131,7 +130,7 @@ const authProvider = {
             })
     },
     postStudentInfoJsonServer: (grade, id) => {
-        return fetch(`${JSONServerPath}/students_info`, {
+        return fetch(`http://localhost:3030/students_info`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -140,8 +139,6 @@ const authProvider = {
                 "first_name": localStorage.getItem('first_name'),
                 "last_name": localStorage.getItem('last_name'),
                 "patronymic": localStorage.getItem('patronymic'),
-                //"grade": localStorage.getItem('grade'),
-                // "id": localStorage.getItem('id'),
                 "phone": localStorage.getItem('phone'),
                 "id": id,
                 "grade": grade
@@ -160,7 +157,7 @@ const authProvider = {
             })
     },
     patchStudentGrade: (grade) => {
-        return fetch(`${ApiPath}/users/student_info`, {
+        return fetch(`http://localhost:8000/api/users/student_info`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -177,7 +174,7 @@ const authProvider = {
                 return Promise.resolve()
             })
             .then(() => {
-                fetch(`${JSONServerPath}/students_info/${localStorage.getItem('id')}`, {
+                fetch(`http://localhost:3030/students_info/${localStorage.getItem('id')}`, {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",
@@ -201,7 +198,7 @@ const authProvider = {
             })
     },
     postTutorInfo: (subject) => {
-        return fetch(`${ApiPath}/users/tutor_info`, {
+        return fetch(`http://localhost:8000/api/users/tutor_info`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -222,7 +219,7 @@ const authProvider = {
             })
     },
     patchUserPhone: (phone) => {
-        return fetch(`${ApiPath}/users/full_info`, {
+        return fetch(`http://localhost:8000/api/users/full_info`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -240,7 +237,7 @@ const authProvider = {
             })
             .then(() => {
                 if (localStorage.getItem("role") === "ST") {
-                    fetch(`${JSONServerPath}/students_info/${localStorage.getItem('id')}`, {
+                    fetch(`http://localhost:3030/students_info/${localStorage.getItem('id')}`, {
                         method: "PATCH",
                         headers: {
                             "Content-Type": "application/json",
@@ -265,7 +262,7 @@ const authProvider = {
             })
     },
     getTutorInfo: () => {
-        return fetch(`${ApiPath}/users/tutor_info`, {
+        return fetch(`http://localhost:8000/api/users/tutor_info`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -297,7 +294,7 @@ const authProvider = {
             })
     },
     getIdentity: () => {
-        return fetch(`${ApiPath}/users/full_info`, {
+        return fetch(`http://localhost:8000/api/users/full_info`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
