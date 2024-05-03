@@ -18,7 +18,6 @@
     cursor: not-allowed;
 }
 
-
-.iconArchive {
+.icon_archive {
     color: light-dark(var(--mantine-color-yellow-9), var(--mantine-color-yellow-7));
 }

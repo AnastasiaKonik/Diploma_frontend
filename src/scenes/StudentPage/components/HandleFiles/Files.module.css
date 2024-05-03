@@ -1,0 +1,4 @@
+.trash_btn {
+    color: light-dark(var(--mantine-color-pink-8), var(--mantine-color-pink-9));
+    border-color: light-dark(var(--mantine-color-pink-8), var(--mantine-color-pink-9));
+}

@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 
 import {Container, Title, Text, Stack, Paper, Button, Group} from "@mantine/core";
 
-import {Logo} from "../../components/Logo";
+import {Logo} from "../../components/index.js";
 import classes from "./Home.module.css";
 
 export const Home = () => {
@@ -35,10 +35,14 @@ export const Home = () => {
                             Пользоваться системой могут как репетиторы, так и ученики.
                         </Text>
                         <Group justify="center">
-                            <Button className={classes.reg_btn} variant="filled" onClick={() => routeChangeSt()}>Зарегистрироваться
-                                как ученик</Button>
-                            <Button className={classes.reg_btn} variant="filled" onClick={() => routeChangeTut()}>Зарегистрироваться как
-                                репетитор</Button>
+                            <Button className={classes.reg_btn} variant="filled"
+                                    onClick={() => routeChangeSt()}>
+                                Зарегистрироваться как ученик
+                            </Button>
+                            <Button className={classes.reg_btn} variant="filled"
+                                    onClick={() => routeChangeTut()}>
+                                Зарегистрироваться как репетитор
+                            </Button>
                         </Group>
                     </Stack>
                 </Paper>

@@ -4,6 +4,7 @@ import {Box, Button, FileButton, Group, Image, Stack, Text} from "@mantine/core"
 import {MIME_TYPES} from "@mantine/dropzone";
 
 import {Dropzone} from "./Dropzone.jsx";
+import classes from "./Files.module.css";
 
 
 export function HandleTaskFiles() {
@@ -31,9 +32,9 @@ export function HandleTaskFiles() {
                 formData.append(`file${index}`, file);
             });
             formData.append('author',
-            `${localStorage.getItem("first_name")} ${localStorage.getItem("last_name")} ${localStorage.getItem("patronymic")}`,
-        );
-            formData.append('assignee_id', localStorage.getItem("student_id"));
+                `${localStorage.getItem("first_name")} ${localStorage.getItem("last_name")} ${localStorage.getItem("patronymic")}`,
+            );
+            formData.append('student_id', localStorage.getItem("student_id"));
 
 
             const response = await fetch('http://localhost:3030/tasks', {
@@ -82,7 +83,9 @@ export function HandleTaskFiles() {
                             {file.type.includes("image") ? (
                                 <Image maw="300" fit="contain" src={URL.createObjectURL(file)}/>
                             ) : (
-                                <Text>{file.name}</Text>
+                                <Text>
+                                    {file.name}
+                                </Text>
                             )}
                         </Box>
                     ))}
@@ -99,10 +102,12 @@ export function HandleTaskFiles() {
                         >
                             {(props) => <Button {...props}>Выбрать другие файлы</Button>}
                         </FileButton>
-                        <Button variant="outline" color="pink" onClick={handleRemoveFiles}>
+                        <Button variant="outline" className={classes.trash_btn}
+                                onClick={handleRemoveFiles}>
                             Удалить все
                         </Button>
-                        <Button variant="outline" onClick={handleSaveFiles}>
+                        <Button variant="outline"
+                                onClick={handleSaveFiles}>
                             Сохранить и отправить
                         </Button>
                     </Group>

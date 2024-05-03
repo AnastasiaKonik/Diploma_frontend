@@ -1,7 +1,9 @@
+import React, {useEffect, useState} from "react";
+
 import {Group, Text, Title} from "@mantine/core";
+
 import classes from "../StudentPage.module.css";
 import {IconPhone, IconSchool, IconUser} from "@tabler/icons-react";
-import React, {useEffect, useState} from "react";
 
 
 export function StudentData() {
@@ -20,12 +22,13 @@ export function StudentData() {
     const last_name = localStorage.getItem('student_surname')
 
     const getStudentId = async () => {
-        await fetch(`http://localhost:3030/students_info?&first_name=${first_name}&last_name=${last_name}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
+        await fetch(`http://localhost:3030/students_info?&first_name=${first_name}&last_name=${last_name}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
             .then(response => response.json())
             .then(json => {
                 setStudent(json.map(x => {
@@ -49,7 +52,9 @@ export function StudentData() {
 
     return (
         <>
-            <Title order={2} mb="xs" className={classes.title}>Информация об ученике</Title>
+            <Title order={2} mb="xs" className={classes.title}>
+                Информация об ученике
+            </Title>
             <div>
                 <Group wrap="nowrap">
                     <IconUser stroke={1.5} size="1rem" className={classes.icon}/>

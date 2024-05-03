@@ -10,9 +10,11 @@ import classes from "./StudentsList.module.css";
 
 export function StudentsList() {
     const [newStudentName, setNewStudentName] = useState('');
-    const tutor = localStorage.getItem("login")
     const [students, setStudents] = useState([])
     const [errorMessage, setErrorMessage] = useState("");
+    const [isButtonDisabled, setButtonDisabled] = useState(true);
+
+    const tutor = localStorage.getItem("login")
 
     useEffect(() => {
         fetch(`http://localhost:3030/tutors_students?tutor=${tutor}`, {
@@ -32,18 +34,20 @@ export function StudentsList() {
 
 
     const handleAddStudent = async () => {
-        if (/^[а-яА-Я]+\s[а-яА-Я]+$/.test(newStudentName) || /^[а-яА-Я]+\s[а-яА-Я]+\s[а-яА-Я]+$/.test(newStudentName)) {
+        if (/^[а-яА-Я]+\s[а-яА-Я]+$/.test(newStudentName)
+            || /^[а-яА-Я]+\s[а-яА-Я]+\s[а-яА-Я]+$/.test(newStudentName)) {
             const last_name = newStudentName.split(' ')[0];
             const first_name = newStudentName.split(' ')[1];
             const patronymic = newStudentName.split(' ')[2] ? newStudentName.split(' ')[2] : "";
 
-            await fetch(`http://localhost:3030/students_info?first_name=${first_name}&last_name=${last_name}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-                 .then(response => {
+            await fetch(`http://localhost:3030/students_info?first_name=${first_name}&last_name=${last_name}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                .then(response => {
                     if (!response.ok) {
                         response.json()
                             .then(json => {
@@ -124,8 +128,6 @@ export function StudentsList() {
         setStudents(updatedStudents);
     };
 
-    const [isButtonDisabled, setButtonDisabled] = useState(true);
-
     return (
         <div>
             <List size="md" spacing="xs" type="ordered">
@@ -154,21 +156,19 @@ export function StudentsList() {
 
                             {student.archived && (
                                 <ActionIcon
-                                    onClick={() => handleUnarchiveStudent(index)}
                                     variant="default"
                                     className={classes.iconArchive}
                                     mx="sm"
-                                >
+                                    onClick={() => handleUnarchiveStudent(index)}>
                                     <IconArchiveOff size="1rem" stroke={1.5}/>
                                 </ActionIcon>
                             )}
                             {!student.archived && (
                                 <ActionIcon
-                                    onClick={() => handleArchiveStudent(index)}
                                     variant="default"
-                                    className={classes.iconArchive}
+                                    className={classes.icon_archive}
                                     mx="sm"
-                                >
+                                    onClick={() => handleArchiveStudent(index)}>
                                     <IconArchive size="1rem" stroke={1.5}/>
                                 </ActionIcon>
                             )}
@@ -180,7 +180,7 @@ export function StudentsList() {
             </List>
 
             <TextInput
-                error={errorMessage}
+                placeholder="Введите ФИО ученика"
                 mt="md"
                 maw={300}
                 value={newStudentName}
@@ -189,12 +189,14 @@ export function StudentsList() {
                     setButtonDisabled(false)
                     setNewStudentName(event.target.value)
                 }}
-                placeholder="Введите ФИО ученика"
+                error={errorMessage}
             />
-            <Button aria-disabled='true'
+            <Button aria-disabled='true' mt="sm" mb="md"
                     disabled={isButtonDisabled}
                     className={isButtonDisabled ? classes.dis_btn : classes.add_btn}
-                    onClick={handleAddStudent} mt="sm">Добавить ученика</Button>
+                    onClick={handleAddStudent}>
+                Добавить ученика
+            </Button>
         </div>
     );
 }

@@ -1,17 +1,18 @@
-import React, { useRef } from "react";
+import React, {useRef} from "react";
 
-import { Button, Group, Stack, Text, rem } from "@mantine/core";
+import {Button, Group, Stack, Text, rem} from "@mantine/core";
 import {Dropzone as MantineDropzone, MIME_TYPES} from "@mantine/dropzone";
 
-import { IconUpload, IconPhoto, IconX } from "@tabler/icons-react";
+import {IconUpload, IconPhoto, IconX} from "@tabler/icons-react";
 
-export const Dropzone = ({ onDrop, error, ...rest }) => {
+export const Dropzone = ({onDrop, error, ...rest}) => {
     const openRef = useRef(null);
 
     return (
         <>
             <MantineDropzone
                 openRef={openRef}
+                maxSize={5 * 1024 ** 2}
                 onReject={(files) => console.log("rejected files", files)}
                 accept={[MIME_TYPES.png,
                     MIME_TYPES.pdf,
@@ -21,7 +22,7 @@ export const Dropzone = ({ onDrop, error, ...rest }) => {
                     MIME_TYPES.xlsx]}
                 activateOnClick={false}
                 onDrop={onDrop}
-                style={{ ...(error && { borderColor: "var(--mantine-color-error)" }) }}
+                style={{...(error && {borderColor: "var(--mantine-color-error)"})}}
                 {...rest}
             >
                 <Stack
@@ -29,7 +30,7 @@ export const Dropzone = ({ onDrop, error, ...rest }) => {
                     align="center"
                     gap="xl"
                     mih={220}
-                    style={{ pointerEvents: "none" }}
+                    style={{pointerEvents: "none"}}
                 >
                     <MantineDropzone.Accept>
                         <IconUpload
@@ -63,15 +64,16 @@ export const Dropzone = ({ onDrop, error, ...rest }) => {
                     </MantineDropzone.Idle>
 
                     <Stack align="center" gap={0}>
-                        <Text size="xl">Перетащите файлы сюда</Text>
+                        <Text size="xl">
+                            Перетащите файлы сюда
+                        </Text>
                         <Text size="sm" c="dimmed">
                             или нажмите на кнопку
                         </Text>
                         <Group mt="md">
                             <Button
                                 onClick={() => openRef.current?.()}
-                                style={{ pointerEvents: "all" }}
-                            >
+                                style={{pointerEvents: "all"}}>
                                 Выбрать файлы
                             </Button>
                         </Group>

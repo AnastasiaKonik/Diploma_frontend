@@ -8,8 +8,7 @@ export function PasswordRequirement({meets, label}) {
             c={meets ? 'teal' : 'red'}
             style={{display: 'flex', alignItems: 'center'}}
             mt={7}
-            size="sm"
-        >
+            size="sm">
             {meets ? (
                 <IconCheck style={{width: rem(14), height: rem(14)}}/>
             ) : (

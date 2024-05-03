@@ -6,9 +6,9 @@ import {Container, Title, Button, PasswordInput, TextInput, Paper, Popover, Prog
 import {matches, useForm} from "@mantine/form";
 
 
-import authProvider from "../../authProvider.jsx";
+import authProvider from "../../../authProvider.jsx";
 import classes from "./RegistrationSt.module.css";
-import {getStrength, PasswordRequirement, requirements} from "../hooks/index.js";
+import {getStrength, PasswordRequirement, requirements} from "../../hooks/index.js";
 
 
 export const RegistrationSt = () => {
@@ -34,12 +34,13 @@ export const RegistrationSt = () => {
         },
 
         validate: {
-            first_name: (value) => (value.length > 64 ? 'Имя должно быть менее 64 символов' : null),
-            last_name: (value) => (value.length > 64 ? 'Фамилия должна быть менее 64 символов' : null),
-            patronymic: (value) => (value.length > 64 ? 'Отчество должно быть менее 64 символов' : null),
-            username: matches(/^([a-zA-Z0-9]){4,12}$/, 'Логин должен содержать от 4 до 12 символов латиницей ' +
-                'или цифр'),
-            phone: (value) => (value.length !== 18 ? 'Номер введен некорректно' : null),
+            first_name: (value) => (value.length > 64 ? 'Имя должно быть менее 64 символов' : ""),
+            last_name: (value) => (value.length > 64 ? 'Фамилия должна быть менее 64 символов' : ""),
+            patronymic: (value) => (value.length > 64 ? 'Отчество должно быть менее 64 символов' : ""),
+            username:
+                matches(/^([a-zA-Z0-9]){4,12}$/, 'Логин должен содержать от 4 до 12 символов латиницей ' +
+                    'или цифр'),
+            phone: (value) => (value.length !== 18 ? 'Номер введен некорректно' : ""),
             grade: matches(/^\b([1-9]|1[0-1])\b/, 'Класс от 1 до 11'),
 
         },
@@ -82,7 +83,6 @@ export const RegistrationSt = () => {
                 })
         }
         setTimeout(postJsonServer, 1000)
-
     };
 
     return (

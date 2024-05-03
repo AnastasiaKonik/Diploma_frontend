@@ -42,7 +42,7 @@ export function PersonalAreas() {
     } else {
         return (
             <Container className={classes.main}>
-                <h2>
+                <h2 className={classes.heading}>
                     У вас нет доступа к личному кабинету
                 </h2>
             </Container>

@@ -13,12 +13,12 @@ export function StudentInfo() {
     const [isPhoneEditing, setIsPhoneEditing] = useState(false);
     const [isGradeEditing, setIsGradeEditing] = useState(false);
     const [userData, setUserData] = useState({
-        first_name: null,
-        last_name: null,
-        patronymic: null,
-        phone: null,
-        grade: null,
-        id: null,
+        first_name: "",
+        last_name: "",
+        patronymic: "",
+        phone: "",
+        grade: "",
+        id: "",
     });
 
     useEffect(() => {
@@ -51,12 +51,6 @@ export function StudentInfo() {
             });
     }, []);
 
-    const handlePhoneClick = () => {
-        setIsPhoneEditing(true);
-    };
-    const handleGradeClick = () => {
-        setIsGradeEditing(true);
-    };
 
     const handleChangePhone = (event) => {
         setUserData(prevUserData => ({
@@ -65,7 +59,7 @@ export function StudentInfo() {
         }))
     };
     const handleChangeGrade = (event) => {
-        setUserData((prevUserData) => ({
+        setUserData(prevUserData => ({
             ...prevUserData,
             grade: event.target.value
         }));
@@ -108,21 +102,23 @@ export function StudentInfo() {
                             onChange={handleChangePhone}
                         />
                         <ActionIcon component="button" variant="subtle" color="green"
-                                    type="submit" onClick={handlePhoneSubmit}>
+                                    type="submit"
+                                    onClick={handlePhoneSubmit}>
                             <IconCheck size="1rem" stroke={1.5}/>
                         </ActionIcon>
                     </>
                 ) : (
                     <>
                         <Text fz="lg" className={classes.text}>{userData.phone}</Text>
-                        <ActionIcon variant="subtle" color="gray" onClick={handlePhoneClick}>
+                        <ActionIcon variant="subtle" color="gray"
+                                    onClick={() => setIsPhoneEditing(true)}>
                             <IconEdit size="1rem" stroke={1.5}/>
                         </ActionIcon>
                     </>
                 )}
             </Group>
 
-            <Group wrap="nowrap" gap={10} mt={5}>
+            <Group wrap="nowrap" gap={10} mt={5} mb="md">
                 <IconSchool stroke={1.5} size="1rem" className={classes.icon}/>
                 {isGradeEditing ? (
                     <>
@@ -131,14 +127,16 @@ export function StudentInfo() {
                             onChange={handleChangeGrade}
                         />
                         <ActionIcon component="button" variant="subtle" color="green"
-                                    type="submit" onClick={handleGradeSubmit}>
+                                    type="submit"
+                                    onClick={handleGradeSubmit}>
                             <IconCheck size="1rem" stroke={1.5}/>
                         </ActionIcon>
                     </>
                 ) : (
                     <>
                         <Text fz="lg" className={classes.text}>{userData.grade} класс</Text>
-                        <ActionIcon variant="subtle" color="gray" onClick={handleGradeClick}>
+                        <ActionIcon variant="subtle" color="gray"
+                                    onClick={() => setIsGradeEditing(true)}>
                             <IconEdit size="1rem" stroke={1.5}/>
                         </ActionIcon>
                     </>

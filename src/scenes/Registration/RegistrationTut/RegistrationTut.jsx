@@ -5,8 +5,8 @@ import {IMaskInput} from 'react-imask';
 import {Container, Title, Button, PasswordInput, TextInput, Paper, Popover, Progress, Group, Text} from "@mantine/core";
 import {matches, useForm} from "@mantine/form";
 
-import {getStrength, PasswordRequirement, requirements} from "../hooks/index.js";
-import authProvider from "../../authProvider.jsx";
+import {getStrength, PasswordRequirement, requirements} from "../../hooks/index.js";
+import authProvider from "../../../authProvider.jsx";
 import classes from "./RegistrationTut.module.css";
 
 export const RegistrationTut = () => {

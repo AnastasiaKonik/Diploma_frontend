@@ -4,9 +4,9 @@ import {Link, Outlet, useLocation} from "react-router-dom";
 import {AppShell, Burger, Group} from "@mantine/core";
 import {useDisclosure} from "@mantine/hooks";
 
-import {ThemeToggle} from "./components/ThemeToggle";
-import {Footer} from "./components/Footer";
-import {Logo} from "./components/Logo";
+import {ThemeToggle} from "./components/index.js";
+import {Footer} from "./components/index.js";
+import {Logo} from "./components/index.js";
 
 import authProvider from "./authProvider.jsx";
 import classes from "./Root.module.css";
@@ -47,12 +47,17 @@ const Root = () => {
                         size="sm"
                         aria-label="menu"
                     />
+
                     <Group justify="space-between" style={{flex: 1}}>
                         <Logo/>
+
                         <Group ml="xl" gap={0} visibleFrom="sm">
                             {isLoggedIn ? (
                                 <>
-                                    <Link className={classes.control} to="/" onClick={() => {handleLogout(); close()}}>
+                                    <Link className={classes.control} to="/" onClick={() => {
+                                        handleLogout();
+                                        close()
+                                    }}>
                                         Выйти из системы
                                     </Link>
                                 </>
@@ -66,6 +71,7 @@ const Root = () => {
                                     </Link>
                                 </>
                             )}
+
                             <ThemeToggle/>
                         </Group>
                     </Group>
@@ -75,7 +81,10 @@ const Root = () => {
             <AppShell.Navbar py="md" px={4}>
                 {isLoggedIn ? (
                     <>
-                        <Link className={classes.control} to="/" onClick={() => {handleLogout(); close()}}>
+                        <Link className={classes.control} to="/" onClick={() => {
+                            handleLogout();
+                            close()
+                        }}>
                             Выйти из системы
                         </Link>
                     </>
@@ -89,6 +98,7 @@ const Root = () => {
                         </Link>
                     </>
                 )}
+
                 <ThemeToggle/>
             </AppShell.Navbar>
 

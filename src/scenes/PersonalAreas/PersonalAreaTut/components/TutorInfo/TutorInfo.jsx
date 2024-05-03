@@ -9,14 +9,14 @@ import authProvider from "../../../../../authProvider.jsx";
 import classes from "./TutorInfo.module.css";
 
 export function TutorInfo() {
-    const [isPhoneEditing, setIsPhoneEditing] = useState(false);
     const [userData, setUserData] = useState({
-        first_name: null,
-        last_name: null,
-        patronymic: null,
-        phone: null,
-        id: null,
+        first_name: "",
+        last_name: "",
+        patronymic: "",
+        phone: "",
+        id: "",
     });
+    const [isPhoneEditing, setIsPhoneEditing] = useState(false);
 
     useEffect(() => {
         authProvider.getIdentity()
@@ -25,7 +25,7 @@ export function TutorInfo() {
                     ...prevUserData,
                     first_name: identityData.first_name,
                     last_name: identityData.last_name,
-                    patronymic: identityData.patronymic || null,
+                    patronymic: identityData.patronymic || "",
                     phone: identityData.phone
                 }));
             })
@@ -48,9 +48,6 @@ export function TutorInfo() {
             });
     }, []);
 
-    const handlePhoneClick = () => {
-        setIsPhoneEditing(true);
-    };
 
     const handleChangePhone = (event) => {
         setUserData(prevUserData => ({
@@ -84,7 +81,7 @@ export function TutorInfo() {
                 </Text>
             </Group>
 
-            <Group wrap="nowrap" gap={10} mt={5}>
+            <Group wrap="nowrap" gap={10} mt={5} mb="md">
                 <IconPhoneCall stroke={1.5} size="1rem" className={classes.icon}/>
                 {isPhoneEditing ? (
                     <>
@@ -95,14 +92,18 @@ export function TutorInfo() {
                             onChange={handleChangePhone}
                         />
                         <ActionIcon component="button" variant="subtle" color="green"
-                                    type="submit" onClick={handlePhoneSubmit}>
+                                    type="submit"
+                                    onClick={handlePhoneSubmit}>
                             <IconCheck size="1rem" stroke={1.5}/>
                         </ActionIcon>
                     </>
                 ) : (
                     <>
-                        <Text fz="lg" className={classes.text}>{userData.phone}</Text>
-                        <ActionIcon variant="subtle" color="gray" onClick={handlePhoneClick}>
+                        <Text fz="lg" className={classes.text}>
+                            {userData.phone}
+                        </Text>
+                        <ActionIcon variant="subtle" color="gray"
+                                    onClick={() => setIsPhoneEditing(true)}>
                             <IconEdit size="1rem" stroke={1.5}/>
                         </ActionIcon>
                     </>

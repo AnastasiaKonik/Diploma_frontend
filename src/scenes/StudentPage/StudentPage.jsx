@@ -4,12 +4,13 @@ import {useNavigate} from "react-router-dom";
 import {ActionIcon, Box, Button, Container, Group, Paper, Stack, Text, TextInput, Title} from '@mantine/core';
 
 import {GetMaterials, HandleMaterialFiles} from "./components";
+import {HandleTaskFiles, StudentData} from "./components/index.js";
 
 import {IconCheck, IconEdit} from "@tabler/icons-react";
 
 import authProvider from "../../authProvider.jsx";
 import classes from "./StudentPage.module.css";
-import {HandleTaskFiles, StudentData} from "./components/index.js";
+
 
 export function StudentPage() {
     let navigate = useNavigate();
@@ -18,7 +19,12 @@ export function StudentPage() {
         navigate(path);
     };
 
+
+    const [task, setTask] = useState("");
     const [isTutor, setIsTutor] = useState(false);
+    const [isTaskEditing, setIsTaskEditing] = useState(false);
+    const [isButtonDisabled, setButtonDisabled] = useState(true);
+
 
     useEffect(() => {
         authProvider.checkAuth()
@@ -36,13 +42,10 @@ export function StudentPage() {
                     })
             })
             .catch(error => {
-                console.error('Error fetching user identity:', error);
+                console.error('Ошибка получения пользователя', error);
             });
     }, []);
 
-
-    const [isTaskEditing, setIsTaskEditing] = useState(false);
-    const [task, setTask] = useState("");
 
     const handleSendText = async () => {
         try {
@@ -52,7 +55,7 @@ export function StudentPage() {
                     "text": task,
                     "author":
                         `${localStorage.getItem("first_name")} ${localStorage.getItem("last_name")} ${localStorage.getItem("patronymic")}`,
-                    "assignee_id": localStorage.getItem("student_id")
+                    "student_id": localStorage.getItem("student_id")
                 }),
                 headers: {
                     "Content-Type": "application/json",
@@ -64,35 +67,43 @@ export function StudentPage() {
                 setTask("")
                 return data.files;
             } else {
-                console.log('Failed to save files');
+                console.log('Не удалось сохранить файлы');
             }
         } catch (error) {
-            console.error('Error saving files:', error);
+            console.error('Ошибка сохранения файлов:', error);
             return [];
         }
     };
-
-    const [isButtonDisabled, setButtonDisabled] = useState(true);
 
     return (
         <Container fluid maw={1400} className={classes.main}>
             {isTutor ? (
                     <>
                         <Box px="md" mx="auto" pt="xs" mb="md">
-                            <Title order={1} mb="lg" align="center" className={classes.text}>Страница ученика</Title>
+                            <Title order={1} mb="lg" align="center" className={classes.text}>
+                                Страница ученика
+                            </Title>
                             <StudentData/>
 
-                            <Title order={2} mb="sm" mt="lg" className={classes.title}>Материалы для занятий</Title>
+                            <Title order={2} mb="sm" mt="lg" className={classes.title}>
+                                Материалы для занятий
+                            </Title>
                             <Group wrap="nowrap">
                                 <Stack>
-                                    <Title order={3} className={classes.text}>Прикрепить материалы:</Title>
+                                    <Title order={3} className={classes.text}>
+                                        Прикрепить материалы:
+                                    </Title>
                                     <HandleMaterialFiles/>
-                                    <Title order={4} className={classes.text}>Ваши материалы:</Title>
-                                   <GetMaterials/>
+                                    <Title order={4} className={classes.text}>
+                                        Ваши материалы:
+                                    </Title>
+                                    <GetMaterials/>
                                 </Stack>
                             </Group>
 
-                            <Title order={2} mb="sm" mt="lg" className={classes.title}>Выдать задание</Title>
+                            <Title order={2} mb="sm" mt="lg" className={classes.title}>
+                                Выдать задание
+                            </Title>
                             <Group wrap="nowrap" gap={10} mt={5} mb="sm">
                                 <Stack>
                                     <HandleTaskFiles/>
@@ -101,9 +112,7 @@ export function StudentPage() {
                                             <>
                                                 <TextInput
                                                     value={task}
-                                                    onChange={(event) => {
-                                                        setTask(event.target.value)
-                                                    }}
+                                                    onChange={(event) => setTask(event.target.value)}
                                                 />
                                                 <ActionIcon component="button" variant="subtle" color="green"
                                                             type="submit"
@@ -117,15 +126,12 @@ export function StudentPage() {
                                         ) : (
                                             <>
                                                 <Paper withBorder p="xs" shadow="md" miw={250}>
-                                                    <Text
-                                                        fz="md"
-                                                        className={classes.text}>{task}
+                                                    <Text fz="md" className={classes.text}>
+                                                        {task}
                                                     </Text>
                                                 </Paper>
                                                 <ActionIcon variant="subtle" color="gray"
-                                                            onClick={() => {
-                                                                setIsTaskEditing(true)
-                                                            }}>
+                                                            onClick={() => setIsTaskEditing(true)}>
                                                     <IconEdit size="1rem" stroke={1.5}/>
                                                 </ActionIcon>
                                             </>
@@ -133,13 +139,15 @@ export function StudentPage() {
                                     </Group>
                                     <Button w="fit-content" aria-disabled='true' type="submit"
                                             className={isButtonDisabled ? classes.dis_btn : classes.send_btn}
-                                            disabled={isButtonDisabled} onClick={handleSendText}>
+                                            disabled={isButtonDisabled}
+                                            onClick={handleSendText}>
                                         Отправить задание текстом
                                     </Button>
                                 </Stack>
                             </Group>
 
-                            <Button mt="xl" mb="lg" mx="auto" className={classes.btn} type="submit"
+                            <Button mt="xl" mb="md" mx="auto" className={classes.btn}
+                                    type="submit"
                                     onClick={() => routeChange()}>
                                 Назад
                             </Button>
@@ -148,7 +156,7 @@ export function StudentPage() {
                 ) :
                 (
                     <Container className={classes.main}>
-                        <h2>
+                        <h2 className={classes.heading}>
                             У вас нет доступа к странице ученика
                         </h2>
                     </Container>

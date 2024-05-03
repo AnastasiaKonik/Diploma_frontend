@@ -15,8 +15,9 @@ export const Login = () => {
         },
 
         validate: {
-            username: matches(/^([a-zA-Z0-9]){4,12}$/, 'Логин должен содержать от 4 до 12 символов латиницей ' +
-                'или цифр'),
+            username:
+                matches(/^([a-zA-Z0-9]){4,12}$/, 'Логин должен содержать от 4 до 12 символов латиницей ' +
+                    'или цифр'),
         },
     });
 
@@ -62,8 +63,7 @@ export const Login = () => {
                                 key={errorKey}
                                 c="var(--mantine-color-error)"
                                 fz="sm"
-                                style={{textIndent: 0}}
-                            >
+                                style={{textIndent: 0}}>
                                 {form.errors[errorKey]}
                             </Text>
                         ))

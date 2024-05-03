@@ -27,6 +27,10 @@
     cursor: not-allowed;
 }
 
-/*.main {*/
-/*    height: calc(100vh);*/
-/*}*/
+.main {
+    min-height: calc(100vh - 140px);
+}
+
+.heading {
+    text-align: center;
+}
