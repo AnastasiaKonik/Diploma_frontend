@@ -129,7 +129,7 @@ export function StudentsList() {
     };
 
     return (
-        <div>
+        <>
             <List size="md" spacing="xs" type="ordered">
                 {students.map((student, index) => (
                     <List.Item key={index}>
@@ -197,6 +197,6 @@ export function StudentsList() {
                     onClick={handleAddStudent}>
                 Добавить ученика
             </Button>
-        </div>
+        </>
     );
 }

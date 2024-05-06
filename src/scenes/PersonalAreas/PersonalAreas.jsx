@@ -10,28 +10,29 @@ import classes from "./PersonalAreas.module.css";
 
 
 export function PersonalAreas() {
-    const [role, setRole] = useState(null);
+    const [role, setRole] = useState("");
+
+    const getUserRole = async () => {
+        try {
+            await authProvider.checkAuth()
+            await authProvider.getIdentity()
+
+            const permissions = await authProvider.getPermissions()
+
+            if (permissions === 'TU') {
+                setRole("tutor")
+            } else if (permissions === 'ST') {
+                setRole("student")
+            } else {
+                setRole("")
+            }
+        } catch (error) {
+            console.error('Ошибка получения пользователя', error);
+        }
+    }
 
     useEffect(() => {
-        authProvider.checkAuth()
-            .then(() => {
-                authProvider.getIdentity()
-                    .then(() => {
-                        authProvider.getPermissions()
-                            .then((userRole) => {
-                                if (userRole === 'ST') {
-                                    setRole("student");
-                                } else if (userRole === 'TU') {
-                                    setRole("tutor");
-                                } else {
-                                    setRole("");
-                                }
-                            });
-                    })
-            })
-            .catch(error => {
-                console.error('Error fetching user identity:', error);
-            });
+        getUserRole().then()
     }, []);
 
 

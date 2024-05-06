@@ -83,7 +83,7 @@ export function StudentInfo() {
     };
 
     return (
-        <div>
+        <>
             <Group wrap="nowrap" gap={10} mt={5}>
                 <IconUser stroke={1.5} size="1rem" className={classes.icon}/>
                 <Text fz="xl" className={classes.text}>
@@ -142,6 +142,6 @@ export function StudentInfo() {
                     </>
                 )}
             </Group>
-        </div>
+        </>
     );
 }
