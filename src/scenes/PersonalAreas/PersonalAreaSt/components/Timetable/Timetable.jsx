@@ -19,8 +19,10 @@ export function TimetableSt() {
         }
     ])
 
-    const getTimetable = () => {
-        fetch(`http://localhost:3030/lessons/?student_id=${localStorage.getItem('id')}`, {
+    const studentId = localStorage.getItem('id')
+
+    const getTimetable = async () => {
+        fetch(`http://localhost:3030/lessons/?student_id=${studentId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -49,8 +51,8 @@ export function TimetableSt() {
     }
 
     useEffect(() => {
-        setTimeout(getTimetable, 100)
-    }, []);
+        getTimetable().then()
+    }, [studentId]);
 
     const weekday = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
 

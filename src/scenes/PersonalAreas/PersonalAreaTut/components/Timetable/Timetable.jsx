@@ -21,8 +21,8 @@ export function TimetableTut() {
 
     const tutorId = localStorage.getItem('id')
 
-    const getTimetable = () => {
-        fetch(`http://localhost:3030/lessons/?tutor_id=${tutorId}`, {
+    const getTimetable = async () => {
+        await fetch(`http://localhost:3030/lessons/?tutor_id=${tutorId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -49,8 +49,8 @@ export function TimetableTut() {
     }
 
     useEffect(() => {
-        setTimeout(getTimetable, 100)
-    }, [localStorage.getItem("lesson_id")]);
+        getTimetable().then()
+    }, [tutorId]);
 
 
     const handleEdit = (id, field, value) => {
@@ -185,7 +185,7 @@ export function TimetableTut() {
     };
 
     const handleAddRow = () => {
-        const newId = data[0].id + 1;
+        const newId = (parseInt(data[0].id) + 1).toString();
         const newRow = {
             id: newId,
             date: '',
@@ -194,6 +194,7 @@ export function TimetableTut() {
             student: ''
         };
         setData([...data, newRow]);
+        localStorage.setItem("lesson_id", newId)
 
         fetch(`http://localhost:3030/lessons/`, {
             method: "POST",
